@@ -19,8 +19,8 @@ function renderWallet(){
     const tags=[];if(c.unverified)tags.push('<span class="tag ai">'+esc(t('aiCard'))+'</span>');else{const pend=c.rules.some(r=>reqs(r).some(q=>q.type!=='plan'&&!S.flags[q.key]));if(pend)tags.push('<span class="tag warn">!</span>');}
     return '<div class="wcard'+(S.defaultCard===c.id?' def':'')+'" data-id="'+c.id+'">'+cardFace(c,'face')+tags.join('')+'<div class="nm">'+esc(L(c.name))+'</div><div class="bt"><b>'+pct(top)+'</b><small>'+esc(topR?L(topR.label):'')+'</small></div><div class="bt"><small>'+esc(t('general'==='x'?'':catName('general')))+' '+pct(g)+'</small>'+(c.plan?'<small>'+esc(S.flags[c.plan.key]?t('cubePlan',{p:L(c.plan.options[S.flags[c.plan.key]])}):t('cubeNone'))+'</small>':'')+'</div></div>';}).join('')+'</div>';
   const qs=questList();
-  if(qs.length){h+='<div class="h2">'+esc(t('quests'))+'</div>'+qs.map(q=>{if(q.plan){const c=q.card;return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+(q.done?'✅':'🔀')+'</div><div class="tx"><b>'+esc(L(c.name))+' · '+esc(q.done?t('cubePlan',{p:L(c.plan.options[S.flags[c.plan.key]])}):t('cubeNone'))+'</b><small>'+Object.entries(c.plan.options).map(([k,v])=>'<span class="tap" data-plan="'+k+'" data-card="'+c.id+'">'+esc(L(v))+'</span>').join(' · ')+'</small></div><div class="xp">+'+q.xp+'</div></div>';}
-    return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+(q.done?'✅':(q.req.type==='register'?'📝':'🏦'))+'</div><div class="tx"><b>'+esc(L(q.card.name))+' · '+esc(L(q.rule.label))+' '+pct(q.rule.rate)+'</b><small>'+esc(L(q.req.howto))+'</small></div><div class="xp">'+(q.done?'✓':'+'+q.xp)+'</div></div>';}).join('');}
+  if(qs.length){h+='<div class="h2">'+esc(t('quests'))+'</div>'+qs.map(q=>{if(q.plan){const c=q.card;return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+ic(q.done?'check':'plan')+'</div><div class="tx"><b>'+esc(L(c.name))+' · '+esc(q.done?t('cubePlan',{p:L(c.plan.options[S.flags[c.plan.key]])}):t('cubeNone'))+'</b><small>'+Object.entries(c.plan.options).map(([k,v])=>'<span class="tap" data-plan="'+k+'" data-card="'+c.id+'">'+esc(L(v))+'</span>').join(' · ')+'</small></div><div class="xp">+'+q.xp+'</div></div>';}
+    return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+ic(q.done?'check':(q.req.type==='register'?'register':'bank'))+'</div><div class="tx"><b>'+esc(L(q.card.name))+' · '+esc(L(q.rule.label))+' '+pct(q.rule.rate)+'</b><small>'+esc(L(q.req.howto))+'</small></div><div class="xp">'+(q.done?'✓':'+'+q.xp)+'</div></div>';}).join('');}
   h+='<div class="h2">'+esc(t('bestRates'))+'</div><div class="bars">'+cards.map(c=>{let top=0;for(const r of c.rules){if(reqMet(r,S.flags)&&r.rate>top&&!(r.cats&&r.cats.length===0))top=r.rate;}return '<div class="bar"><div class="n">'+esc(L(c.name))+'</div><div class="t"><div class="f" style="width:'+Math.min(100,top/0.10*100)+'%"></div></div><div class="v">'+pct(top)+'</div></div>';}).join('')+'<div class="note" style="margin-top:8px">'+esc(LANG==='zh'?'依目前登錄／方案狀態算出的最高回饋率；上限與門檻在推薦時才套用。':'Highest rate under current registration/plan state; caps and thresholds apply at recommendation time.')+'</div></div>';
   h+='<div class="h2">'+esc(t('sourceLab'))+'</div><div class="src">'+cards.map(c=>'<div>'+esc(L(c.name))+' · <a href="'+esc(c.source)+'" target="_blank" rel="noopener">'+esc((c.source||'').replace(/^https?:\/\//,'').slice(0,42))+'…</a> · '+esc(t('verified'))+' '+esc(c.verified||'')+'</div>').join('')+'</div>';
   const b=$('#walletBody');b.innerHTML=h;
@@ -37,7 +37,7 @@ function cardSheet(id){const c=cardById(id);if(!c)return;let h='<h3>'+esc(L(c.na
 /* ---------- ADD CARD ---------- */
 function openAdd(){go('addcard');
   let h='<div class="page-title">'+esc(t('addTitle'))+'</div><div class="page-sub">'+esc(t('addSub'))+'</div>';
-  h+='<div class="grid-btns"><button class="btn accent" id="addShoot">📷 '+esc(t('takePhoto'))+'</button><button class="btn ghost" id="addPick">🖼 '+esc(t('pickPhoto'))+'</button></div>';
+  h+='<div class="grid-btns"><button class="btn accent" id="addShoot">'+ic('camera')+' '+esc(t('takePhoto'))+'</button><button class="btn ghost" id="addPick">'+esc(t('pickPhoto'))+'</button></div>';
   h+='<div class="h2">'+esc(t('samples'))+'</div><div class="samples">'+CATALOG.filter(c=>CARD_ART[c.id]).map(c=>'<button data-s="'+c.id+'" class="'+(S.wallet.includes(c.id)?'has':'')+'"><img src="'+CARD_ART[c.id]+'" alt=""></button>').join('')+'</div>';
   h+='<div style="margin-top:14px"><button class="btn ghost sm block" id="loadDemo">'+esc(t('loadDemo'))+'</button></div>';
   $('#addBody').innerHTML=h;
@@ -69,7 +69,7 @@ async function identifyFlow(masked){
     $('#idYes').addEventListener('click',()=>{if(!S.wallet.includes(c.id))S.wallet.push(c.id);save();closeSheet();confetti();gainXP(40,'+ '+L(c.name));renderHome();go('wallet');renderWallet();});
     $('#idNo').addEventListener('click',closeSheet);
   }else{
-    sheet('<h3>'+esc(t('notFound'))+'</h3><p>'+esc((r&&(r.bank_guess||''))+' '+(r&&(r.card_name_guess||'')))+'</p><button class="btn accent block" id="idRes">🔎 '+esc(t('research'))+'</button><div class="note" style="margin-top:8px">'+esc(t('researchSub'))+'</div>');
+    sheet('<h3>'+esc(t('notFound'))+'</h3><p>'+esc((r&&(r.bank_guess||''))+' '+(r&&(r.card_name_guess||'')))+'</p><button class="btn accent block" id="idRes">'+esc(t('research'))+'</button><div class="note" style="margin-top:8px">'+esc(t('researchSub'))+'</div>');
     $('#idRes').addEventListener('click',()=>{closeSheet();researchFlow(r);});
   }
 }
@@ -94,7 +94,7 @@ function normalizeResearched(e){
 /* ---------- STATEMENT ---------- */
 let lastStmt=null;
 $('#stmtBtn').addEventListener('click',()=>{go('statement');renderStmtIntro();});
-function renderStmtIntro(){$('#stmtBody').innerHTML='<div class="page-title">'+esc(t('stmtIntro'))+'</div><div class="page-sub">'+esc(t('stmtSub'))+'</div><div class="grid-btns"><button class="btn accent" id="stShoot">📷 '+esc(t('stmtShoot'))+'</button><button class="btn ghost" id="stPick">🖼 '+esc(t('stmtPick'))+'</button></div><div style="height:12px"></div><button class="btn ghost sm block" id="stSample">🧾 '+esc(t('stmtSample'))+'</button>';
+function renderStmtIntro(){$('#stmtBody').innerHTML='<div class="page-title">'+esc(t('stmtIntro'))+'</div><div class="page-sub">'+esc(t('stmtSub'))+'</div><div class="grid-btns"><button class="btn accent" id="stShoot">'+ic('camera')+' '+esc(t('stmtShoot'))+'</button><button class="btn ghost" id="stPick">'+esc(t('stmtPick'))+'</button></div><div style="height:12px"></div><button class="btn ghost sm block" id="stSample">'+ic('receipt')+' '+esc(t('stmtSample'))+'</button>';
   $('#stShoot').addEventListener('click',async()=>{const img=await pickFile(true);if(img)stmtFlow(img);});
   $('#stPick').addEventListener('click',async()=>{const img=await pickFile(false);if(img)stmtFlow(img);});
   $('#stSample').addEventListener('click',()=>stmtFlow(statementImage(),true));}
@@ -111,10 +111,10 @@ function renderStmtResult(res){
   // what the missed money buys in a year
   const year=res.left*12;const items=t('eqItems');
   h+='<div class="h2">'+esc(t('eqTitle'))+'</div><div class="eq-wrap"><div class="eq-year">'+esc(t('eqYear'))+'<b class="mono">'+esc(money(year))+'</b></div>';
-  const cupsN=Math.min(60,Math.floor(year/items[0][2]));h+='<div class="cups">'+Array.from({length:60},(_,i)=>'<i class="'+(i<cupsN?'':'g')+'" style="animation-delay:'+(i*25)+'ms"></i>').join('')+'</div><div class="note" style="margin-top:6px">'+esc(t('eqOf',{n:Math.floor(year/items[0][2]),u:items[0][1]}))+' '+items[0][0]+'</div>';
+  const cupsN=Math.min(60,Math.floor(year/items[0][2]));h+='<div class="cups">'+Array.from({length:60},(_,i)=>'<i class="'+(i<cupsN?'':'g')+'" style="animation-delay:'+(i*25)+'ms"></i>').join('')+'</div><div class="note" style="margin-top:6px">'+esc(t('eqOf',{n:Math.floor(year/items[0][2]),u:items[0][1]}))+'</div>';
   const pick=[];for(const it of items.slice(1)){if(year>=it[2])pick.push({it,n:Math.floor(year/it[2]),p:1});else pick.push({it,n:0,p:year/it[2]});}
   const shown=pick.filter(x=>x.n>0).slice(-3).concat(pick.filter(x=>x.n===0).slice(0,1));
-  h+='<div class="eq-grid">'+shown.map(x=>'<div class="eq'+(x.n?'':' locked')+'"><div class="em">'+x.it[0]+'</div><div class="n">'+(x.n?esc(t('eqOf',{n:x.n,u:x.it[1]})):Math.round(x.p*100)+'%')+'</div><div class="l">'+(x.n?'≈ '+esc(money(x.it[2]))+' / 1':esc(t('eqTo',{u:'1 '+x.it[1],x:money(x.it[2]-year)})))+'</div><div class="p" style="width:'+Math.round(x.p*100)+'%"></div></div>').join('')+'</div></div>';
+  h+='<div class="eq-grid">'+shown.map(x=>'<div class="eq'+(x.n?'':' locked')+'"><div class="em">'+(ICONS[x.it[0]]||'')+'</div><div class="n">'+(x.n?esc(t('eqOf',{n:x.n,u:x.it[1]})):Math.round(x.p*100)+'%')+'</div><div class="l">'+(x.n?'≈ '+esc(money(x.it[2]))+' / 1':esc(t('eqTo',{u:'1 '+x.it[1],x:money(x.it[2]-year)})))+'</div><div class="p" style="width:'+Math.round(x.p*100)+'%"></div></div>').join('')+'</div></div>';
   // donut: earned vs left
   const tot=Math.max(1,res.bestPot),ea=res.actual/tot;const C=2*Math.PI*34;
   h+='<div class="donut" style="margin-top:12px"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="34" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="12"/><circle cx="42" cy="42" r="34" fill="none" stroke="#30e3a2" stroke-width="12" stroke-dasharray="'+(C*(1-ea))+' '+C+'" stroke-dashoffset="'+(-C*ea)+'"/><circle cx="42" cy="42" r="34" fill="none" stroke="#fff" stroke-width="12" stroke-dasharray="'+(C*ea)+' '+C+'"/></svg><div class="tx"><b>'+Math.round((1-ea)*100)+'%</b> '+esc(t('donutL'))+' · '+esc(money(res.left))+'<br>'+esc(t('donutA'))+' '+esc(money(res.actual))+' · '+Math.round(ea*100)+'%</div></div>';

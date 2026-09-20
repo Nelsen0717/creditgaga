@@ -11,8 +11,8 @@
 <title>CreditGaga 刷神卡卡</title>
 <style>
 :root{
-  --bg:#000; --surface:#111214; --surface2:#1b1d21; --line:#2a2d33;
-  --ink:#fff; --muted:#9aa0a8; --accent:#30e3a2; --accent-ink:#04120c; --warn:#ffb340; --danger:#ff5c6c;
+  --bg:#050607; --surface:#101216; --surface2:#181b21; --line:#262a32;
+  --ink:#fff; --muted:#9aa3ad; --accent:#34e1a1; --accent-ink:#04140d; --warn:#f5c451; --warn-ink:#2a1e00; --danger:#ff6b6b;
   --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
   --spring:cubic-bezier(.22,1.35,.36,1);
 }
@@ -306,5 +306,51 @@ body.nocam #shutter{background:var(--accent);box-shadow:0 0 0 4px rgba(0,0,0,.6)
 .donut .tx b{color:#fff;}
 .typebar{position:absolute;left:16px;right:16px;bottom:calc(var(--sab) + 286px);z-index:4;display:flex;}
 .typebar button{flex:1;height:44px;border-radius:22px;background:rgba(255,255,255,.14);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-size:15px;font-weight:600;color:rgba(255,255,255,.85);text-align:left;padding:0 16px;display:flex;align-items:center;gap:8px;}
+
+/* STRATEGY BOARD (replaces the ring graph) */
+#galaxy .aurora{position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 40% at 20% 0%,rgba(52,225,161,.22),transparent 60%),radial-gradient(70% 35% at 90% 10%,rgba(245,196,81,.14),transparent 60%),radial-gradient(100% 60% at 50% 110%,rgba(52,225,161,.08),transparent 60%);}
+#sbBody{position:absolute;left:0;right:0;top:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(var(--sat) + 118px) 18px calc(var(--sab) + 150px);perspective:900px;}
+.sb-row{display:flex;gap:14px;align-items:center;margin-bottom:18px;animation:fadeup .6s var(--spring) both;}
+.sb-card{width:132px;aspect-ratio:1.586;border-radius:11px;overflow:hidden;position:relative;flex:0 0 auto;box-shadow:0 22px 40px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.08) inset;transform:rotateY(16deg) rotateX(5deg);transform-style:preserve-3d;background:#222;}
+.sb-card img{position:absolute;left:50%;top:50%;width:63.1%;height:158.6%;transform:translate(-50%,-50%) rotate(-90deg);object-fit:cover;}
+.sb-card::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.28) 48%,rgba(52,225,161,.18) 53%,rgba(255,255,255,0) 66%);mix-blend-mode:screen;}
+.sb-card.solid{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;text-align:center;padding:8px;}
+.sb-row.lead .sb-card{width:164px;transform:rotateY(12deg) rotateX(4deg) scale(1.02);box-shadow:0 30px 60px rgba(0,0,0,.7),0 0 60px rgba(52,225,161,.12),0 0 0 1px rgba(255,255,255,.1) inset;}
+.sb-info{flex:1;min-width:0;}
+.sb-name{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-head{display:flex;align-items:baseline;gap:8px;margin:2px 0 6px;}
+.sb-head b{font-size:30px;font-weight:800;letter-spacing:-.04em;color:var(--accent);line-height:1;}
+.sb-row.lead .sb-head b{font-size:40px;}
+.sb-head span{font-size:12px;color:var(--muted);font-weight:600;}
+.sb-chips{display:flex;flex-wrap:wrap;gap:5px;}
+.sb-chips span{font-size:12px;font-weight:700;padding:5px 9px;border-radius:9px;background:rgba(255,255,255,.08);color:#fff;white-space:nowrap;}
+.sb-chips span i{font-style:normal;color:var(--accent);margin-left:4px;font-variant-numeric:tabular-nums;}
+.sb-chips span.lock{background:rgba(245,196,81,.12);color:var(--warn);}
+.sb-chips span.lock i{color:var(--warn);}
+.sb-chips span.none{background:none;color:var(--muted);font-weight:500;}
+.sb-lock{margin-top:8px;border-top:1px solid var(--line);padding-top:14px;}
+.sb-lock .h{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);margin-bottom:8px;}
+.sb-lock .sb-chips span{background:rgba(245,196,81,.1);color:#fff;}
+.sb-lock .sb-chips span i{color:var(--warn);}
+.sb-lock .sb-chips span em{font-style:normal;color:var(--muted);font-weight:500;margin-left:4px;}
+.ic{width:20px;height:20px;display:inline-block;vertical-align:-4px;}
+.ic svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.controls .side .ic{width:22px;height:22px;}
+.quest .ic{font-size:0;}
+.quest .ic .ic{width:20px;height:20px;color:var(--warn);}
+.quest.done .ic .ic{color:var(--accent);}
+.eq .em{width:28px;height:28px;color:var(--accent);}
+.eq .em svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.eq.locked .em{color:var(--muted);}
+.unlock{background:linear-gradient(135deg,var(--warn),#ffd77a);color:var(--warn-ink);}
+.unlock .b{background:var(--warn-ink);color:var(--warn);}
+.alt.locked .r{color:var(--warn);}
+.bignum{color:var(--danger);}
+.cups i{background:var(--danger);}
+.eq .n{color:#fff;}
+.eq .p{background:var(--warn);}
+.donut .l{color:var(--danger);}
+.wcard .tag.warn{background:var(--warn);color:var(--warn-ink);}
+.fix .g{color:var(--accent);}
 </style>
 </head>

@@ -11,8 +11,8 @@
 <title>CreditGaga 刷神卡卡</title>
 <style>
 :root{
-  --bg:#000; --surface:#111214; --surface2:#1b1d21; --line:#2a2d33;
-  --ink:#fff; --muted:#9aa0a8; --accent:#30e3a2; --accent-ink:#04120c; --warn:#ffb340; --danger:#ff5c6c;
+  --bg:#050607; --surface:#101216; --surface2:#181b21; --line:#262a32;
+  --ink:#fff; --muted:#9aa3ad; --accent:#34e1a1; --accent-ink:#04140d; --warn:#f5c451; --warn-ink:#2a1e00; --danger:#ff6b6b;
   --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
   --spring:cubic-bezier(.22,1.35,.36,1);
 }
@@ -306,6 +306,52 @@ body.nocam #shutter{background:var(--accent);box-shadow:0 0 0 4px rgba(0,0,0,.6)
 .donut .tx b{color:#fff;}
 .typebar{position:absolute;left:16px;right:16px;bottom:calc(var(--sab) + 286px);z-index:4;display:flex;}
 .typebar button{flex:1;height:44px;border-radius:22px;background:rgba(255,255,255,.14);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);font-size:15px;font-weight:600;color:rgba(255,255,255,.85);text-align:left;padding:0 16px;display:flex;align-items:center;gap:8px;}
+
+/* STRATEGY BOARD (replaces the ring graph) */
+#galaxy .aurora{position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 40% at 20% 0%,rgba(52,225,161,.22),transparent 60%),radial-gradient(70% 35% at 90% 10%,rgba(245,196,81,.14),transparent 60%),radial-gradient(100% 60% at 50% 110%,rgba(52,225,161,.08),transparent 60%);}
+#sbBody{position:absolute;left:0;right:0;top:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(var(--sat) + 118px) 18px calc(var(--sab) + 150px);perspective:900px;}
+.sb-row{display:flex;gap:14px;align-items:center;margin-bottom:18px;animation:fadeup .6s var(--spring) both;}
+.sb-card{width:132px;aspect-ratio:1.586;border-radius:11px;overflow:hidden;position:relative;flex:0 0 auto;box-shadow:0 22px 40px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.08) inset;transform:rotateY(16deg) rotateX(5deg);transform-style:preserve-3d;background:#222;}
+.sb-card img{position:absolute;left:50%;top:50%;width:63.1%;height:158.6%;transform:translate(-50%,-50%) rotate(-90deg);object-fit:cover;}
+.sb-card::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.28) 48%,rgba(52,225,161,.18) 53%,rgba(255,255,255,0) 66%);mix-blend-mode:screen;}
+.sb-card.solid{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;text-align:center;padding:8px;}
+.sb-row.lead .sb-card{width:164px;transform:rotateY(12deg) rotateX(4deg) scale(1.02);box-shadow:0 30px 60px rgba(0,0,0,.7),0 0 60px rgba(52,225,161,.12),0 0 0 1px rgba(255,255,255,.1) inset;}
+.sb-info{flex:1;min-width:0;}
+.sb-name{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-head{display:flex;align-items:baseline;gap:8px;margin:2px 0 6px;}
+.sb-head b{font-size:30px;font-weight:800;letter-spacing:-.04em;color:var(--accent);line-height:1;}
+.sb-row.lead .sb-head b{font-size:40px;}
+.sb-head span{font-size:12px;color:var(--muted);font-weight:600;}
+.sb-chips{display:flex;flex-wrap:wrap;gap:5px;}
+.sb-chips span{font-size:12px;font-weight:700;padding:5px 9px;border-radius:9px;background:rgba(255,255,255,.08);color:#fff;white-space:nowrap;}
+.sb-chips span i{font-style:normal;color:var(--accent);margin-left:4px;font-variant-numeric:tabular-nums;}
+.sb-chips span.lock{background:rgba(245,196,81,.12);color:var(--warn);}
+.sb-chips span.lock i{color:var(--warn);}
+.sb-chips span.none{background:none;color:var(--muted);font-weight:500;}
+.sb-lock{margin-top:8px;border-top:1px solid var(--line);padding-top:14px;}
+.sb-lock .h{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);margin-bottom:8px;}
+.sb-lock .sb-chips span{background:rgba(245,196,81,.1);color:#fff;}
+.sb-lock .sb-chips span i{color:var(--warn);}
+.sb-lock .sb-chips span em{font-style:normal;color:var(--muted);font-weight:500;margin-left:4px;}
+.ic{width:20px;height:20px;display:inline-block;vertical-align:-4px;}
+.ic svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.controls .side .ic{width:22px;height:22px;}
+.quest .ic{font-size:0;}
+.quest .ic .ic{width:20px;height:20px;color:var(--warn);}
+.quest.done .ic .ic{color:var(--accent);}
+.eq .em{width:28px;height:28px;color:var(--accent);}
+.eq .em svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.eq.locked .em{color:var(--muted);}
+.unlock{background:linear-gradient(135deg,var(--warn),#ffd77a);color:var(--warn-ink);}
+.unlock .b{background:var(--warn-ink);color:var(--warn);}
+.alt.locked .r{color:var(--warn);}
+.bignum{color:var(--danger);}
+.cups i{background:var(--danger);}
+.eq .n{color:#fff;}
+.eq .p{background:var(--warn);}
+.donut .l{color:var(--danger);}
+.wcard .tag.warn{background:var(--warn);color:var(--warn-ink);}
+.fix .g{color:var(--accent);}
 </style>
 </head>
 <body>
@@ -314,8 +360,8 @@ body.nocam #shutter{background:var(--accent);box-shadow:0 0 0 4px rgba(0,0,0,.6)
 <!-- GALAXY / strategy map (entry) -->
 <section id="galaxy" class="screen active">
   <canvas id="gxCv"></canvas>
-  <svg id="gxSvg"></svg>
-  <div id="gxNodes" style="position:absolute;inset:0;"></div>
+  <div class="aurora"></div>
+  <div id="sbBody"></div>
   <div class="gx-top">
     <header class="topbar">
       <div class="brand"><div class="mascot" id="gxMascot"><i></i></div><div><span data-t="app"></span><small data-t="galaxySub"></small></div></div>
@@ -324,8 +370,8 @@ body.nocam #shutter{background:var(--accent);box-shadow:0 0 0 4px rgba(0,0,0,.6)
     <div class="gx-strat" id="gxStrat"></div>
   </div>
   <div class="gx-bottom">
-    <div class="row"><button class="btn ghost" id="gxWallet">💳 <span data-t="wallet"></span></button><button class="btn ghost" id="gxStmt">🧾 <span data-t="stmt"></span></button></div>
-    <button class="btn accent huge" id="gxGo">📷 <span data-t="goBuy"></span> →</button>
+    <div class="row"><button class="btn ghost" id="gxWallet"><span class="ic" data-ic="wallet"></span> <span data-t="wallet"></span></button><button class="btn ghost" id="gxStmt"><span class="ic" data-ic="receipt"></span> <span data-t="stmt"></span></button></div>
+    <button class="btn accent huge" id="gxGo"><span class="ic" data-ic="camera"></span> <span data-t="goBuy"></span> →</button>
   </div>
 </section>
 
@@ -345,13 +391,13 @@ body.nocam #shutter{background:var(--accent);box-shadow:0 0 0 4px rgba(0,0,0,.6)
     </div>
   </header>
   <div class="hint" id="homeHint"></div>
-  <div class="typebar"><button id="typeBtn">⌨️ <span data-t="typeHint"></span></button></div>
+  <div class="typebar"><button id="typeBtn"><span class="ic" data-ic="type"></span> <span data-t="typeHint"></span></button></div>
   <div class="scenes" id="scenes"></div>
   <div id="stack"></div>
   <div class="controls">
-    <button class="side l" id="walletBtn"><span>💳</span><em data-t="wallet" style="font-style:normal"></em></button>
+    <button class="side l" id="walletBtn"><span class="ic" data-ic="wallet"></span><em data-t="wallet" style="font-style:normal"></em></button>
     <button id="shutter" aria-label="shutter"></button>
-    <button class="side r" id="stmtBtn"><span>🧾</span><em data-t="stmt" style="font-style:normal"></em></button>
+    <button class="side r" id="stmtBtn"><span class="ic" data-ic="receipt"></span><em data-t="stmt" style="font-style:normal"></em></button>
   </div>
 </section>
 
@@ -410,7 +456,7 @@ const CARD_ART = {"dbs_everyday": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ
 
 /* ---------- i18n ---------- */
 const I18N={
-zh:{galaxySub:'你的卡片星系',goBuy:'我要買東西',typeHint:'或打字說一句：在 50嵐買珍奶 60 元',typeTitle:'打字告訴卡卡',typeSub:'店家、東西、大概多少錢，一句就好。',typeGo:'幫我選怎麼付',strat:'{n} 種消費 · {top}',stratLock:'解鎖後還有 {k} 種可以更好',eqTitle:'少賺的錢，一年能換什麼',eqYear:'照這個月推一整年',eqItems:[['🧋','杯珍奶',60],['☕','杯拿鐵',150],['🎬','張電影票',350],['📺','年 Netflix',4680],['🎧','副 AirPods',5990],['✈️','張東京來回機票',8000],['📱','支 iPhone',30000],['👜','個名牌包',60000]],eqOf:'{n} {u}',eqTo:'離 {u} 還差 {x}',donutA:'實際拿到',donutL:'留在桌上',scanChips:['店名','金額','付款方式','你的卡'],app:'刷神卡卡',wallet:'錢包',stmt:'帳單',addcard:'加一張卡',maskTitle:'先塗掉個資',maskSub:'用手指把卡號、姓名、效期塗黑。這一步在手機裡完成，塗完才會送出。',undo:'復原',autoMask:'一鍵遮卡號區',onDevice:'🔒 只在手機內',maskDone:'塗好了，辨識卡面',stmtTitle:'留在桌上的錢',
+zh:{galaxySub:'你的卡片星系',goBuy:'我要買東西',typeHint:'或打字說一句：在 50嵐買珍奶 60 元',typeTitle:'打字告訴卡卡',typeSub:'店家、東西、大概多少錢，一句就好。',typeGo:'幫我選怎麼付',strat:'{n} 種消費 · {top}',stratLock:'解鎖後還有 {k} 種可以更好',eqTitle:'少賺的錢，一年能換什麼',eqYear:'照這個月推一整年',eqItems:[['cup','杯珍奶',60],['coffee','杯拿鐵',150],['ticket','張電影票',350],['tv','年 Netflix',4680],['headphones','副 AirPods',5990],['plane','張東京來回機票',8000],['phone','支 iPhone',30000],['bag','個名牌包',60000]],sbCats:'{n} 類消費最划算',sbBest:'最高',sbLock:'解鎖後會更好',sbNone:'目前沒有它最划算的類別',eqOf:'{n} {u}',eqTo:'離 {u} 還差 {x}',donutA:'實際拿到',donutL:'留在桌上',scanChips:['店名','金額','付款方式','你的卡'],app:'刷神卡卡',wallet:'錢包',stmt:'帳單',addcard:'加一張卡',maskTitle:'先塗掉個資',maskSub:'用手指把卡號、姓名、效期塗黑。這一步在手機裡完成，塗完才會送出。',undo:'復原',autoMask:'一鍵遮卡號區',onDevice:'🔒 只在手機內',maskDone:'塗好了，辨識卡面',stmtTitle:'留在桌上的錢',
 hintTitle:'對準要買的東西',hintSub:'點一下，卡卡告訴你刷哪張。',hintNoCam:'沒相機也能玩：選一個場景',scenesLab:'模擬',
 scanning:['卡卡看看…','看店名、看價錢…','算一算你的卡…'],scanSub:'Claude 讀畫面，規則由本機算',
 useThis:'就刷這張',others:'看其他卡',retake:'再拍一次',back:'這筆拿回',theOne:'注意',unlockK:'多拿 {x} 的方法',unlockDone:'我弄好了 ✓',unlockLater:'先不管',
@@ -431,7 +477,7 @@ catNames:{general:'一般消費',convenience:'超商',drinks:'手搖飲／咖啡
 scenes:[['🧋','50嵐 手搖飲','drinks',60,'50嵐 信義店 · 珍珠奶茶 NT$60 · LINE Pay 可用'],['💻','Apple Store 信義','apple',36900,'Apple Store 信義 A13 · MacBook Air NT$36,900'],['🍣','壽司郎','dining',880,'壽司郎 台北信義店 · 結帳 NT$880 · JCB 通路'],['🧴','屈臣氏','drugstore',650,'屈臣氏 門市 · 合計 NT$650 · LINE Pay 可用'],['🏪','7-ELEVEN','convenience',120,'7-ELEVEN 統一超商 · NT$120'],['🛋️','IKEA','home',3480,'IKEA 敦北店 · NT$3,480'],['👕','UNIQLO','apparel',1990,'UNIQLO 台北信義店 · NT$1,990'],['🚃','東京 Suica 儲值','jp_transit_topup',2200,'JR 東日本 Suica チャージ ¥10,000（約 NT$2,200）'],['⛽','台塑加油','gas',1200,'台塑石油 加油站 · NT$1,200']],
 dow:['日','一','二','三','四','五','六'],
 },
-en:{galaxySub:'your card galaxy',goBuy:'I’m about to buy',typeHint:'or type it: bubble tea at 50嵐, NT$60',typeTitle:'Tell Gaga in words',typeSub:'Where, what, roughly how much. One line.',typeGo:'Pick how to pay',strat:'{n} categories · {top}',stratLock:'{k} more improve after unlocks',eqTitle:'What the missed money buys in a year',eqYear:'This month × 12',eqItems:[['🧋','bubble teas',60],['☕','lattes',150],['🎬','movie tickets',350],['📺','years of Netflix',4680],['🎧','AirPods',5990],['✈️','Tokyo return flights',8000],['📱','iPhones',30000],['👜','designer bags',60000]],eqOf:'{n} {u}',eqTo:'{x} short of {u}',donutA:'Earned',donutL:'Left on the table',scanChips:['Store','Price','Payment','Your cards'],app:'CreditGaga',wallet:'Wallet',stmt:'Statement',addcard:'Add a card',maskTitle:'Rub out the number',maskSub:'Use your thumb to black out the number, name and expiry. This happens on your phone; nothing leaves until you are done.',undo:'Undo',autoMask:'Auto-cover number area',onDevice:'🔒 On device only',maskDone:'Done, identify the card',stmtTitle:'Left on the table',
+en:{galaxySub:'your card galaxy',goBuy:'I’m about to buy',typeHint:'or type it: bubble tea at 50嵐, NT$60',typeTitle:'Tell Gaga in words',typeSub:'Where, what, roughly how much. One line.',typeGo:'Pick how to pay',strat:'{n} categories · {top}',stratLock:'{k} more improve after unlocks',eqTitle:'What the missed money buys in a year',eqYear:'This month × 12',eqItems:[['cup','bubble teas',60],['coffee','lattes',150],['ticket','movie tickets',350],['tv','years of Netflix',4680],['headphones','AirPods',5990],['plane','Tokyo return flights',8000],['phone','iPhones',30000],['bag','designer bags',60000]],sbCats:'best for {n} categories',sbBest:'top',sbLock:'Better after unlocks',sbNone:'Not the best card for anything yet',eqOf:'{n} {u}',eqTo:'{x} short of {u}',donutA:'Earned',donutL:'Left on the table',scanChips:['Store','Price','Payment','Your cards'],app:'CreditGaga',wallet:'Wallet',stmt:'Statement',addcard:'Add a card',maskTitle:'Rub out the number',maskSub:'Use your thumb to black out the number, name and expiry. This happens on your phone; nothing leaves until you are done.',undo:'Undo',autoMask:'Auto-cover number area',onDevice:'🔒 On device only',maskDone:'Done, identify the card',stmtTitle:'Left on the table',
 hintTitle:'Point at what you are buying',hintSub:'Tap. Gaga picks the card.',hintNoCam:'No camera? Pick a scene',scenesLab:'Simulate',
 scanning:['Let me look…','Reading the store and price…','Running your cards…'],scanSub:'Claude reads, your phone computes',
 useThis:'Pay with this',others:'Other cards',retake:'Retake',back:'You get back',theOne:'Note',unlockK:'Unlock {x} more',unlockDone:'Done it ✓',unlockLater:'Not now',
@@ -668,7 +714,7 @@ $('#sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet();}
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function cardFace(card,cls){const art=CARD_ART[card.id];if(art)return '<div class="'+cls+'"><img src="'+art+'" alt=""></div>';return '<div class="'+cls+' solid" style="background:'+(card.color||'#333')+';color:'+(lightBg(card.color)?'#000':'#fff')+'">'+esc(L(card.name))+'</div>';}
 function lightBg(hex){if(!hex)return false;const n=parseInt(hex.slice(1),16);const r=n>>16,g=(n>>8)&255,b=n&255;return (r*299+g*587+b*114)/1000>150;}
-function applyT(){$$('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));$('#langBtn').textContent=LANG==='zh'?'EN':'繁';document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';}
+function applyT(){if(typeof mountIcons==='function')mountIcons();$$('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));$('#langBtn').textContent=LANG==='zh'?'EN':'繁';document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';}
 function setLang(l){LANG=l;S.lang=l;save();applyT();renderLvl();renderHome();const act=$$('.screen.active')[0];if(act&&act.id==='wallet')renderWallet();if(act&&act.id==='statement'&&lastStmt)renderStmtResult(lastStmt);if(act&&act.id==='result'&&lastRec)renderResult(lastRec);if(act&&act.id==='galaxy')renderGalaxy();}
 $('#langBtn').addEventListener('click',()=>setLang(LANG==='zh'?'en':'zh'));
 function renderLvl(){const li=levelInfo();$('#lvlPill').innerHTML='<span>'+t('lvlShort',{n:li.n})+' '+esc(li.name)+'</span><span style="opacity:.7">·</span><span>'+money(S.saved)+'</span>';const g=$('#gxLvl');if(g)g.innerHTML=$('#lvlPill').innerHTML;}
@@ -681,7 +727,7 @@ let camOn=false,tiltOn=false,camTried=false;
 async function startCam(){camTried=true;try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw 0;const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});const v=$('#cam');v.srcObject=s;await v.play();camOn=true;document.body.classList.remove('nocam');}catch(e){camOn=false;document.body.classList.add('nocam');}renderHome();}
 function renderHome(){
   $('#homeHint').innerHTML='<b>'+esc(t('hintTitle'))+'</b>'+esc(camOn?t('hintSub'):t('hintNoCam'));
-  const sc=$('#scenes');sc.innerHTML='<span class="lab">'+esc(t('scenesLab'))+'</span>'+t('scenes').map((s,i)=>'<button data-i="'+i+'">'+s[0]+' '+esc(s[1])+'</button>').join('');
+  const sc=$('#scenes');sc.innerHTML='<span class="lab">'+esc(t('scenesLab'))+'</span>'+t('scenes').map((s,i)=>'<button data-i="'+i+'">'+esc(s[1])+'</button>').join('');
   sc.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>runScene(+b.dataset.i)));
   const st=$('#stack');const cards=walletCards();st.innerHTML='';
   const n=cards.length;
@@ -692,7 +738,7 @@ function renderHome(){
   if(!n){add.style.transform='';add.textContent='＋ '+t('addcard');}
 }
 function requestTilt(){if(tiltOn)return;const D=window.DeviceOrientationEvent;if(D&&typeof D.requestPermission==='function'){D.requestPermission().then(r=>{if(r==='granted')bindTilt();}).catch(()=>{});}else if(D){bindTilt();}}
-function bindTilt(){if(tiltOn)return;tiltOn=true;window.addEventListener('deviceorientation',e=>{const g=(e.gamma||0),b=(e.beta||0)-45;const st=$('#stack');st.style.transform='rotateY('+(g*.35)+'deg) rotateX('+(-b*.25)+'deg)';const h=$('.hero');if(h){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}},true);}
+function bindTilt(){if(tiltOn)return;tiltOn=true;window.addEventListener('deviceorientation',e=>{const g=(e.gamma||0),b=(e.beta||0)-45;const st=$('#stack');st.style.transform='rotateY('+(g*.35)+'deg) rotateX('+(-b*.25)+'deg)';const h=$('.hero');if(h){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}$$('.sb-card').forEach(el=>{el.style.transform='rotateY('+(16+g*.4)+'deg) rotateX('+(5-b*.25)+'deg)';});},true);}
 window.addEventListener('mousemove',e=>{const g=(e.clientX/innerWidth-.5)*40,b=(e.clientY/innerHeight-.5)*30;const h=$('.hero');if(h&&h.getAnimations().every(a=>a.playState==='finished')){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}});
 
 /* ---------- capture ---------- */
@@ -770,8 +816,8 @@ function renderWallet(){
     const tags=[];if(c.unverified)tags.push('<span class="tag ai">'+esc(t('aiCard'))+'</span>');else{const pend=c.rules.some(r=>reqs(r).some(q=>q.type!=='plan'&&!S.flags[q.key]));if(pend)tags.push('<span class="tag warn">!</span>');}
     return '<div class="wcard'+(S.defaultCard===c.id?' def':'')+'" data-id="'+c.id+'">'+cardFace(c,'face')+tags.join('')+'<div class="nm">'+esc(L(c.name))+'</div><div class="bt"><b>'+pct(top)+'</b><small>'+esc(topR?L(topR.label):'')+'</small></div><div class="bt"><small>'+esc(t('general'==='x'?'':catName('general')))+' '+pct(g)+'</small>'+(c.plan?'<small>'+esc(S.flags[c.plan.key]?t('cubePlan',{p:L(c.plan.options[S.flags[c.plan.key]])}):t('cubeNone'))+'</small>':'')+'</div></div>';}).join('')+'</div>';
   const qs=questList();
-  if(qs.length){h+='<div class="h2">'+esc(t('quests'))+'</div>'+qs.map(q=>{if(q.plan){const c=q.card;return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+(q.done?'✅':'🔀')+'</div><div class="tx"><b>'+esc(L(c.name))+' · '+esc(q.done?t('cubePlan',{p:L(c.plan.options[S.flags[c.plan.key]])}):t('cubeNone'))+'</b><small>'+Object.entries(c.plan.options).map(([k,v])=>'<span class="tap" data-plan="'+k+'" data-card="'+c.id+'">'+esc(L(v))+'</span>').join(' · ')+'</small></div><div class="xp">+'+q.xp+'</div></div>';}
-    return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+(q.done?'✅':(q.req.type==='register'?'📝':'🏦'))+'</div><div class="tx"><b>'+esc(L(q.card.name))+' · '+esc(L(q.rule.label))+' '+pct(q.rule.rate)+'</b><small>'+esc(L(q.req.howto))+'</small></div><div class="xp">'+(q.done?'✓':'+'+q.xp)+'</div></div>';}).join('');}
+  if(qs.length){h+='<div class="h2">'+esc(t('quests'))+'</div>'+qs.map(q=>{if(q.plan){const c=q.card;return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+ic(q.done?'check':'plan')+'</div><div class="tx"><b>'+esc(L(c.name))+' · '+esc(q.done?t('cubePlan',{p:L(c.plan.options[S.flags[c.plan.key]])}):t('cubeNone'))+'</b><small>'+Object.entries(c.plan.options).map(([k,v])=>'<span class="tap" data-plan="'+k+'" data-card="'+c.id+'">'+esc(L(v))+'</span>').join(' · ')+'</small></div><div class="xp">+'+q.xp+'</div></div>';}
+    return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+ic(q.done?'check':(q.req.type==='register'?'register':'bank'))+'</div><div class="tx"><b>'+esc(L(q.card.name))+' · '+esc(L(q.rule.label))+' '+pct(q.rule.rate)+'</b><small>'+esc(L(q.req.howto))+'</small></div><div class="xp">'+(q.done?'✓':'+'+q.xp)+'</div></div>';}).join('');}
   h+='<div class="h2">'+esc(t('bestRates'))+'</div><div class="bars">'+cards.map(c=>{let top=0;for(const r of c.rules){if(reqMet(r,S.flags)&&r.rate>top&&!(r.cats&&r.cats.length===0))top=r.rate;}return '<div class="bar"><div class="n">'+esc(L(c.name))+'</div><div class="t"><div class="f" style="width:'+Math.min(100,top/0.10*100)+'%"></div></div><div class="v">'+pct(top)+'</div></div>';}).join('')+'<div class="note" style="margin-top:8px">'+esc(LANG==='zh'?'依目前登錄／方案狀態算出的最高回饋率；上限與門檻在推薦時才套用。':'Highest rate under current registration/plan state; caps and thresholds apply at recommendation time.')+'</div></div>';
   h+='<div class="h2">'+esc(t('sourceLab'))+'</div><div class="src">'+cards.map(c=>'<div>'+esc(L(c.name))+' · <a href="'+esc(c.source)+'" target="_blank" rel="noopener">'+esc((c.source||'').replace(/^https?:\/\//,'').slice(0,42))+'…</a> · '+esc(t('verified'))+' '+esc(c.verified||'')+'</div>').join('')+'</div>';
   const b=$('#walletBody');b.innerHTML=h;
@@ -788,7 +834,7 @@ function cardSheet(id){const c=cardById(id);if(!c)return;let h='<h3>'+esc(L(c.na
 /* ---------- ADD CARD ---------- */
 function openAdd(){go('addcard');
   let h='<div class="page-title">'+esc(t('addTitle'))+'</div><div class="page-sub">'+esc(t('addSub'))+'</div>';
-  h+='<div class="grid-btns"><button class="btn accent" id="addShoot">📷 '+esc(t('takePhoto'))+'</button><button class="btn ghost" id="addPick">🖼 '+esc(t('pickPhoto'))+'</button></div>';
+  h+='<div class="grid-btns"><button class="btn accent" id="addShoot">'+ic('camera')+' '+esc(t('takePhoto'))+'</button><button class="btn ghost" id="addPick">'+esc(t('pickPhoto'))+'</button></div>';
   h+='<div class="h2">'+esc(t('samples'))+'</div><div class="samples">'+CATALOG.filter(c=>CARD_ART[c.id]).map(c=>'<button data-s="'+c.id+'" class="'+(S.wallet.includes(c.id)?'has':'')+'"><img src="'+CARD_ART[c.id]+'" alt=""></button>').join('')+'</div>';
   h+='<div style="margin-top:14px"><button class="btn ghost sm block" id="loadDemo">'+esc(t('loadDemo'))+'</button></div>';
   $('#addBody').innerHTML=h;
@@ -820,7 +866,7 @@ async function identifyFlow(masked){
     $('#idYes').addEventListener('click',()=>{if(!S.wallet.includes(c.id))S.wallet.push(c.id);save();closeSheet();confetti();gainXP(40,'+ '+L(c.name));renderHome();go('wallet');renderWallet();});
     $('#idNo').addEventListener('click',closeSheet);
   }else{
-    sheet('<h3>'+esc(t('notFound'))+'</h3><p>'+esc((r&&(r.bank_guess||''))+' '+(r&&(r.card_name_guess||'')))+'</p><button class="btn accent block" id="idRes">🔎 '+esc(t('research'))+'</button><div class="note" style="margin-top:8px">'+esc(t('researchSub'))+'</div>');
+    sheet('<h3>'+esc(t('notFound'))+'</h3><p>'+esc((r&&(r.bank_guess||''))+' '+(r&&(r.card_name_guess||'')))+'</p><button class="btn accent block" id="idRes">'+esc(t('research'))+'</button><div class="note" style="margin-top:8px">'+esc(t('researchSub'))+'</div>');
     $('#idRes').addEventListener('click',()=>{closeSheet();researchFlow(r);});
   }
 }
@@ -845,7 +891,7 @@ function normalizeResearched(e){
 /* ---------- STATEMENT ---------- */
 let lastStmt=null;
 $('#stmtBtn').addEventListener('click',()=>{go('statement');renderStmtIntro();});
-function renderStmtIntro(){$('#stmtBody').innerHTML='<div class="page-title">'+esc(t('stmtIntro'))+'</div><div class="page-sub">'+esc(t('stmtSub'))+'</div><div class="grid-btns"><button class="btn accent" id="stShoot">📷 '+esc(t('stmtShoot'))+'</button><button class="btn ghost" id="stPick">🖼 '+esc(t('stmtPick'))+'</button></div><div style="height:12px"></div><button class="btn ghost sm block" id="stSample">🧾 '+esc(t('stmtSample'))+'</button>';
+function renderStmtIntro(){$('#stmtBody').innerHTML='<div class="page-title">'+esc(t('stmtIntro'))+'</div><div class="page-sub">'+esc(t('stmtSub'))+'</div><div class="grid-btns"><button class="btn accent" id="stShoot">'+ic('camera')+' '+esc(t('stmtShoot'))+'</button><button class="btn ghost" id="stPick">'+esc(t('stmtPick'))+'</button></div><div style="height:12px"></div><button class="btn ghost sm block" id="stSample">'+ic('receipt')+' '+esc(t('stmtSample'))+'</button>';
   $('#stShoot').addEventListener('click',async()=>{const img=await pickFile(true);if(img)stmtFlow(img);});
   $('#stPick').addEventListener('click',async()=>{const img=await pickFile(false);if(img)stmtFlow(img);});
   $('#stSample').addEventListener('click',()=>stmtFlow(statementImage(),true));}
@@ -862,10 +908,10 @@ function renderStmtResult(res){
   // what the missed money buys in a year
   const year=res.left*12;const items=t('eqItems');
   h+='<div class="h2">'+esc(t('eqTitle'))+'</div><div class="eq-wrap"><div class="eq-year">'+esc(t('eqYear'))+'<b class="mono">'+esc(money(year))+'</b></div>';
-  const cupsN=Math.min(60,Math.floor(year/items[0][2]));h+='<div class="cups">'+Array.from({length:60},(_,i)=>'<i class="'+(i<cupsN?'':'g')+'" style="animation-delay:'+(i*25)+'ms"></i>').join('')+'</div><div class="note" style="margin-top:6px">'+esc(t('eqOf',{n:Math.floor(year/items[0][2]),u:items[0][1]}))+' '+items[0][0]+'</div>';
+  const cupsN=Math.min(60,Math.floor(year/items[0][2]));h+='<div class="cups">'+Array.from({length:60},(_,i)=>'<i class="'+(i<cupsN?'':'g')+'" style="animation-delay:'+(i*25)+'ms"></i>').join('')+'</div><div class="note" style="margin-top:6px">'+esc(t('eqOf',{n:Math.floor(year/items[0][2]),u:items[0][1]}))+'</div>';
   const pick=[];for(const it of items.slice(1)){if(year>=it[2])pick.push({it,n:Math.floor(year/it[2]),p:1});else pick.push({it,n:0,p:year/it[2]});}
   const shown=pick.filter(x=>x.n>0).slice(-3).concat(pick.filter(x=>x.n===0).slice(0,1));
-  h+='<div class="eq-grid">'+shown.map(x=>'<div class="eq'+(x.n?'':' locked')+'"><div class="em">'+x.it[0]+'</div><div class="n">'+(x.n?esc(t('eqOf',{n:x.n,u:x.it[1]})):Math.round(x.p*100)+'%')+'</div><div class="l">'+(x.n?'≈ '+esc(money(x.it[2]))+' / 1':esc(t('eqTo',{u:'1 '+x.it[1],x:money(x.it[2]-year)})))+'</div><div class="p" style="width:'+Math.round(x.p*100)+'%"></div></div>').join('')+'</div></div>';
+  h+='<div class="eq-grid">'+shown.map(x=>'<div class="eq'+(x.n?'':' locked')+'"><div class="em">'+(ICONS[x.it[0]]||'')+'</div><div class="n">'+(x.n?esc(t('eqOf',{n:x.n,u:x.it[1]})):Math.round(x.p*100)+'%')+'</div><div class="l">'+(x.n?'≈ '+esc(money(x.it[2]))+' / 1':esc(t('eqTo',{u:'1 '+x.it[1],x:money(x.it[2]-year)})))+'</div><div class="p" style="width:'+Math.round(x.p*100)+'%"></div></div>').join('')+'</div></div>';
   // donut: earned vs left
   const tot=Math.max(1,res.bestPot),ea=res.actual/tot;const C=2*Math.PI*34;
   h+='<div class="donut" style="margin-top:12px"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="34" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="12"/><circle cx="42" cy="42" r="34" fill="none" stroke="#30e3a2" stroke-width="12" stroke-dasharray="'+(C*(1-ea))+' '+C+'" stroke-dashoffset="'+(-C*ea)+'"/><circle cx="42" cy="42" r="34" fill="none" stroke="#fff" stroke-width="12" stroke-dasharray="'+(C*ea)+' '+C+'"/></svg><div class="tx"><b>'+Math.round((1-ea)*100)+'%</b> '+esc(t('donutL'))+' · '+esc(money(res.left))+'<br>'+esc(t('donutA'))+' '+esc(money(res.actual))+' · '+Math.round(ea*100)+'%</div></div>';
@@ -906,35 +952,30 @@ function openSettings(){
 const GX_CATS=[['drinks',60,'🧋'],['dining',500,'🍣'],['convenience',100,'🏪'],['supermarket',1000,'🛒'],['drugstore',500,'🧴'],['apparel',2000,'👕'],['apple',30000,'💻'],['home',3000,'🛋️'],['online',2000,'📦'],['streaming',390,'📺'],['ai_subscription',640,'🤖'],['telecom',1399,'📱'],['utilities',1000,'💡'],['gas',1000,'⛽'],['travel',10000,'✈️'],['overseas_jkt',3000,'🗼']];
 let gxStars=null,gxRAF=null,gxTipT=null;
 function strategy(){const cards=walletCards();const rows=[];for(const [cat,amt,em] of GX_CATS){const ctx={merchant:'',brand:'',category:cat,amount:amt,country:cat==='overseas_jkt'?'JP':'TW',online:['online','streaming','ai_subscription'].includes(cat)};const r=recommend(ctx,cards);rows.push({cat,amt,em,winner:r.winner,unlock:r.unlock});}return rows;}
+const ICONS={wallet:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><rect x="14" y="12.5" width="5" height="3" rx="1"/></svg>',receipt:'<svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L6 21z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>',camera:'<svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',type:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h1M11 10h1M15 10h1M8 14h8"/></svg>',cup:'<svg viewBox="0 0 24 24"><path d="M6 7h12l-1.5 13h-9z"/><path d="M13 7l2-4"/><path d="M6.5 12h11"/></svg>',coffee:'<svg viewBox="0 0 24 24"><path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h2a2.5 2.5 0 0 1 0 5h-2"/><path d="M8 4v2M11 3v3"/></svg>',ticket:'<svg viewBox="0 0 24 24"><path d="M4 8a2 2 0 0 0 0 4v5h16v-5a2 2 0 0 0 0-4V7H4z"/><path d="M12 7v10"/></svg>',tv:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',headphones:'<svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="7" rx="1.5"/><rect x="17" y="13" width="4" height="7" rx="1.5"/></svg>',plane:'<svg viewBox="0 0 24 24"><path d="M2 14l20-9-5 16-5-6z"/><path d="M12 15l-3 4"/></svg>',phone:'<svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/></svg>',bag:'<svg viewBox="0 0 24 24"><path d="M5 9h14l-1 12H6z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/></svg>',register:'<svg viewBox="0 0 24 24"><path d="M5 4h10l4 4v12H5z"/><path d="M9 13l2 2 4-4"/></svg>',bank:'<svg viewBox="0 0 24 24"><path d="M3 9l9-5 9 5H3z"/><path d="M5 9v9M10 9v9M14 9v9M19 9v9M3 20h18"/></svg>',check:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>',plan:'<svg viewBox="0 0 24 24"><path d="M4 7h10M4 17h10"/><path d="M11 4l3 3-3 3M11 14l3 3-3 3"/><path d="M18 5v14"/></svg>'};
+const ic=n=>'<span class="ic">'+(ICONS[n]||'')+'</span>';
+function mountIcons(){$$('[data-ic]').forEach(el=>{if(!el.innerHTML)el.innerHTML=ICONS[el.dataset.ic]||'';});}
+const shortName=c=>L(c.name).replace(/^(合庫|國泰世華|台灣大哥大|中信|元大|星展)\s?/,'').replace(/^(Cathay|CTBC|DBS|Yuanta|Taipei Fubon|Fubon|TCB)\s/,'');
 function renderGalaxy(){
   const W=innerWidth,H=innerHeight;const cards=walletCards();const rows=strategy();
-  // starfield
   const cv=$('#gxCv');cv.width=W*devicePixelRatio;cv.height=H*devicePixelRatio;const g=cv.getContext('2d');g.scale(devicePixelRatio,devicePixelRatio);
-  if(!gxStars||gxStars.W!==W){gxStars={W,list:Array.from({length:140},(_,i)=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,p:Math.random()*6.28,s:.4+Math.random()*.6}))};}
-  cancelAnimationFrame(gxRAF);let t0=null;(function frame(ts){if(!$('#galaxy').classList.contains('active')){return;}t0=t0||ts;const t=(ts-t0)/1000;g.clearRect(0,0,W,H);const rg=g.createRadialGradient(W/2,H*.5,20,W/2,H*.5,H*.7);rg.addColorStop(0,'#0f1a16');rg.addColorStop(1,'#000');g.fillStyle=rg;g.fillRect(0,0,W,H);for(const s of gxStars.list){const a=.35+.65*Math.abs(Math.sin(t*s.s+s.p));g.globalAlpha=a;g.fillStyle=s.r>1.2?'#c9fff0':'#fff';g.beginPath();g.arc(s.x,s.y,s.r,0,6.28);g.fill();}g.globalAlpha=1;gxRAF=requestAnimationFrame(frame);})(performance.now());
-  // layout: cards on inner ring, categories on outer ring
-  const cx=W/2,cy=H*.47,RX1=W*.27,RY1=H*.10,RX2=W*.43,RY2=H*.29;
-  const pos={};const nodes=$('#gxNodes');nodes.innerHTML='';const svg=$('#gxSvg');svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.innerHTML='';
-  const winCount={};rows.forEach(r=>{if(r.winner)winCount[r.winner.card.id]=(winCount[r.winner.card.id]||0)+1;});
-  cards.forEach((c,i)=>{const a=-Math.PI/2+i*(2*Math.PI/Math.max(1,cards.length));const x=cx+Math.cos(a)*RX1,y=cy+Math.sin(a)*RY1;pos[c.id]=[x,y];const n=winCount[c.id]||0;const size=52+Math.min(34,n*6);
-    const el=document.createElement('div');el.className='gx-node card';el.style.left=x+'px';el.style.top=y+'px';el.style.zIndex=3;
-    el.innerHTML='<div class="pl'+(CARD_ART[c.id]?'':' solid')+'" style="width:'+size+'px;height:'+size+'px;animation-delay:'+(i*.4)+'s;'+(CARD_ART[c.id]?'':'background:'+c.color+';color:'+(lightBg(c.color)?'#000':'#fff'))+'">'+(CARD_ART[c.id]?'<img src="'+CARD_ART[c.id]+'" alt="">':esc(L(c.name)).slice(0,6))+(n?'<b>'+n+'</b>':'')+'</div>';
-    el.addEventListener('click',()=>{requestTilt();cardSheet(c.id);});nodes.appendChild(el);});
-  rows.forEach((r,i)=>{const a=-Math.PI/2+i*(2*Math.PI/rows.length);const x=cx+Math.cos(a)*RX2,y=cy+Math.sin(a)*RY2;
-    const el=document.createElement('div');el.className='gx-node cat'+(r.unlock?' locked':'');el.style.left=x+'px';el.style.top=y+'px';el.style.zIndex=2;
-    el.innerHTML='<div class="em">'+r.em+'</div><div class="nm">'+esc(catName(r.cat))+'</div>';
-    el.addEventListener('click',()=>gxTip(x,y,r));nodes.appendChild(el);
-    if(r.winner&&pos[r.winner.card.id]){const [px,py]=pos[r.winner.card.id];const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x);l.setAttribute('y1',y);l.setAttribute('x2',px);l.setAttribute('y2',py);l.setAttribute('class','win');svg.appendChild(l);}
-    if(r.unlock&&pos[r.unlock.card.id]){const [px,py]=pos[r.unlock.card.id];const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x);l.setAttribute('y1',y);l.setAttribute('x2',px);l.setAttribute('y2',py);l.setAttribute('class','pot');svg.appendChild(l);}});
-  // strategy line
-  const top=Object.entries(winCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([id,n])=>'<b>'+esc(L(cardById(id).name).replace(/^(合庫|國泰世華|台灣大哥大|中信|元大|星展)\s?/,''))+'</b> '+n).join(' · ');
-  const k=rows.filter(r=>r.unlock).length;
-  $('#gxStrat').innerHTML=cards.length?esc(t('strat',{n:rows.length,top:''})).replace(/·\s*$/,'')+' · '+top+(k?'<br>'+esc(t('stratLock',{k})):''):esc(t('noCards'));
-  $('#gxLvl').innerHTML=$('#lvlPill').innerHTML;$('#gxLang').textContent=LANG==='zh'?'EN':'繁';
+  if(!gxStars||gxStars.W!==W){gxStars={W,list:Array.from({length:90},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.3,p:Math.random()*6.28,s:.3+Math.random()*.5}))};}
+  cancelAnimationFrame(gxRAF);let t0=null;(function frame(ts){if(!$('#galaxy').classList.contains('active'))return;t0=t0||ts;const t=(ts-t0)/1000;g.clearRect(0,0,W,H);g.fillStyle='#050607';g.fillRect(0,0,W,H);for(const s of gxStars.list){g.globalAlpha=.25+.55*Math.abs(Math.sin(t*s.s+s.p));g.fillStyle='#fff';g.beginPath();g.arc(s.x,s.y,s.r,0,6.28);g.fill();}g.globalAlpha=1;gxRAF=requestAnimationFrame(frame);})(performance.now());
+  const byCard={};rows.forEach(r=>{if(r.winner)(byCard[r.winner.card.id]=byCard[r.winner.card.id]||[]).push(r);});
+  const order=cards.slice().sort((a,b)=>(byCard[b.id]||[]).length-(byCard[a.id]||[]).length);
+  let h='';
+  order.forEach((c,i)=>{const wins=byCard[c.id]||[];let best=0;wins.forEach(r=>{if(r.winner.rule.rate>best)best=r.winner.rule.rate;});
+    h+='<div class="sb-row'+(i===0&&wins.length?' lead':'')+'" style="animation-delay:'+(i*.08)+'s" data-id="'+c.id+'">'+cardFace(c,'sb-card')+'<div class="sb-info"><div class="sb-name">'+esc(L(c.name))+'</div>'
+      +(wins.length?'<div class="sb-head"><b>'+pct(best)+'</b><span>'+esc(t('sbBest'))+' · '+esc(t('sbCats',{n:wins.length}))+'</span></div><div class="sb-chips">'+wins.sort((a,b)=>b.winner.rule.rate-a.winner.rule.rate).map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.winner.rule.rate)+'</i></span>').join('')+'</div>'
+      :'<div class="sb-chips"><span class="none">'+esc(t('sbNone'))+'</span></div>')+'</div></div>';});
+  const locked=rows.filter(r=>r.unlock);
+  if(locked.length){h+='<div class="sb-lock"><div class="h">'+esc(t('sbLock'))+' · '+locked.length+'</div><div class="sb-chips">'+locked.map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.unlock.rule.rate)+'</i><em>'+esc(shortName(r.unlock.card))+'</em></span>').join('')+'</div></div>';}
+  if(!cards.length)h='<div class="empty">'+esc(t('noCards'))+'</div>';
+  const sb=$('#sbBody');sb.innerHTML=h;sb.querySelectorAll('.sb-row').forEach(el=>el.addEventListener('click',()=>{requestTilt();cardSheet(el.dataset.id);}));
+  const top=order.slice(0,3).filter(c=>(byCard[c.id]||[]).length).map(c=>'<b>'+esc(shortName(c))+'</b> '+(byCard[c.id]||[]).length).join(' · ');
+  $('#gxStrat').innerHTML=cards.length?esc(t('strat',{n:rows.length,top:''})).replace(/·\s*$/,'')+' · '+top+(locked.length?'<br>'+esc(t('stratLock',{k:locked.length})):''):'';
+  $('#gxLvl').innerHTML=$('#lvlPill').innerHTML;$('#gxLang').textContent=LANG==='zh'?'EN':'繁';mountIcons();
 }
-function gxTip(x,y,r){clearTimeout(gxTipT);$$('.gx-tip').forEach(e=>e.remove());const d=document.createElement('div');d.className='gx-tip';d.style.left='50%';d.style.top=Math.max(90,Math.min(innerHeight-160,y-70))+'px';
-  const w=r.winner;d.innerHTML=(w?'<span>'+esc(catName(r.cat))+' → '+esc(L(w.card.name))+' '+pct(w.rule.rate)+'</span><small>'+esc(money(r.amt))+' → '+esc(money(w.reward))+(r.unlock?' · 🔓 '+esc(L(r.unlock.card.name))+' '+pct(r.unlock.rule.rate):'')+'</small>':esc(t('noCards')));
-  $('#galaxy').appendChild(d);gxTipT=setTimeout(()=>d.remove(),3200);}
 $('#gxGo').addEventListener('click',()=>{go('home');if(!camOn&&!camTried)startCam();});
 $('#gxWallet').addEventListener('click',()=>{go('wallet');renderWallet();});
 $('#gxStmt').addEventListener('click',()=>{go('statement');renderStmtIntro();});

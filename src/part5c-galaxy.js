@@ -3,35 +3,30 @@
 const GX_CATS=[['drinks',60,'🧋'],['dining',500,'🍣'],['convenience',100,'🏪'],['supermarket',1000,'🛒'],['drugstore',500,'🧴'],['apparel',2000,'👕'],['apple',30000,'💻'],['home',3000,'🛋️'],['online',2000,'📦'],['streaming',390,'📺'],['ai_subscription',640,'🤖'],['telecom',1399,'📱'],['utilities',1000,'💡'],['gas',1000,'⛽'],['travel',10000,'✈️'],['overseas_jkt',3000,'🗼']];
 let gxStars=null,gxRAF=null,gxTipT=null;
 function strategy(){const cards=walletCards();const rows=[];for(const [cat,amt,em] of GX_CATS){const ctx={merchant:'',brand:'',category:cat,amount:amt,country:cat==='overseas_jkt'?'JP':'TW',online:['online','streaming','ai_subscription'].includes(cat)};const r=recommend(ctx,cards);rows.push({cat,amt,em,winner:r.winner,unlock:r.unlock});}return rows;}
+const ICONS={wallet:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><rect x="14" y="12.5" width="5" height="3" rx="1"/></svg>',receipt:'<svg viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L6 21z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>',camera:'<svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',type:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h1M11 10h1M15 10h1M8 14h8"/></svg>',cup:'<svg viewBox="0 0 24 24"><path d="M6 7h12l-1.5 13h-9z"/><path d="M13 7l2-4"/><path d="M6.5 12h11"/></svg>',coffee:'<svg viewBox="0 0 24 24"><path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 10h2a2.5 2.5 0 0 1 0 5h-2"/><path d="M8 4v2M11 3v3"/></svg>',ticket:'<svg viewBox="0 0 24 24"><path d="M4 8a2 2 0 0 0 0 4v5h16v-5a2 2 0 0 0 0-4V7H4z"/><path d="M12 7v10"/></svg>',tv:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',headphones:'<svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="7" rx="1.5"/><rect x="17" y="13" width="4" height="7" rx="1.5"/></svg>',plane:'<svg viewBox="0 0 24 24"><path d="M2 14l20-9-5 16-5-6z"/><path d="M12 15l-3 4"/></svg>',phone:'<svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/></svg>',bag:'<svg viewBox="0 0 24 24"><path d="M5 9h14l-1 12H6z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/></svg>',register:'<svg viewBox="0 0 24 24"><path d="M5 4h10l4 4v12H5z"/><path d="M9 13l2 2 4-4"/></svg>',bank:'<svg viewBox="0 0 24 24"><path d="M3 9l9-5 9 5H3z"/><path d="M5 9v9M10 9v9M14 9v9M19 9v9M3 20h18"/></svg>',check:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>',plan:'<svg viewBox="0 0 24 24"><path d="M4 7h10M4 17h10"/><path d="M11 4l3 3-3 3M11 14l3 3-3 3"/><path d="M18 5v14"/></svg>'};
+const ic=n=>'<span class="ic">'+(ICONS[n]||'')+'</span>';
+function mountIcons(){$$('[data-ic]').forEach(el=>{if(!el.innerHTML)el.innerHTML=ICONS[el.dataset.ic]||'';});}
+const shortName=c=>L(c.name).replace(/^(合庫|國泰世華|台灣大哥大|中信|元大|星展)\s?/,'').replace(/^(Cathay|CTBC|DBS|Yuanta|Taipei Fubon|Fubon|TCB)\s/,'');
 function renderGalaxy(){
   const W=innerWidth,H=innerHeight;const cards=walletCards();const rows=strategy();
-  // starfield
   const cv=$('#gxCv');cv.width=W*devicePixelRatio;cv.height=H*devicePixelRatio;const g=cv.getContext('2d');g.scale(devicePixelRatio,devicePixelRatio);
-  if(!gxStars||gxStars.W!==W){gxStars={W,list:Array.from({length:140},(_,i)=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,p:Math.random()*6.28,s:.4+Math.random()*.6}))};}
-  cancelAnimationFrame(gxRAF);let t0=null;(function frame(ts){if(!$('#galaxy').classList.contains('active')){return;}t0=t0||ts;const t=(ts-t0)/1000;g.clearRect(0,0,W,H);const rg=g.createRadialGradient(W/2,H*.5,20,W/2,H*.5,H*.7);rg.addColorStop(0,'#0f1a16');rg.addColorStop(1,'#000');g.fillStyle=rg;g.fillRect(0,0,W,H);for(const s of gxStars.list){const a=.35+.65*Math.abs(Math.sin(t*s.s+s.p));g.globalAlpha=a;g.fillStyle=s.r>1.2?'#c9fff0':'#fff';g.beginPath();g.arc(s.x,s.y,s.r,0,6.28);g.fill();}g.globalAlpha=1;gxRAF=requestAnimationFrame(frame);})(performance.now());
-  // layout: cards on inner ring, categories on outer ring
-  const cx=W/2,cy=H*.47,RX1=W*.27,RY1=H*.10,RX2=W*.43,RY2=H*.29;
-  const pos={};const nodes=$('#gxNodes');nodes.innerHTML='';const svg=$('#gxSvg');svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.innerHTML='';
-  const winCount={};rows.forEach(r=>{if(r.winner)winCount[r.winner.card.id]=(winCount[r.winner.card.id]||0)+1;});
-  cards.forEach((c,i)=>{const a=-Math.PI/2+i*(2*Math.PI/Math.max(1,cards.length));const x=cx+Math.cos(a)*RX1,y=cy+Math.sin(a)*RY1;pos[c.id]=[x,y];const n=winCount[c.id]||0;const size=52+Math.min(34,n*6);
-    const el=document.createElement('div');el.className='gx-node card';el.style.left=x+'px';el.style.top=y+'px';el.style.zIndex=3;
-    el.innerHTML='<div class="pl'+(CARD_ART[c.id]?'':' solid')+'" style="width:'+size+'px;height:'+size+'px;animation-delay:'+(i*.4)+'s;'+(CARD_ART[c.id]?'':'background:'+c.color+';color:'+(lightBg(c.color)?'#000':'#fff'))+'">'+(CARD_ART[c.id]?'<img src="'+CARD_ART[c.id]+'" alt="">':esc(L(c.name)).slice(0,6))+(n?'<b>'+n+'</b>':'')+'</div>';
-    el.addEventListener('click',()=>{requestTilt();cardSheet(c.id);});nodes.appendChild(el);});
-  rows.forEach((r,i)=>{const a=-Math.PI/2+i*(2*Math.PI/rows.length);const x=cx+Math.cos(a)*RX2,y=cy+Math.sin(a)*RY2;
-    const el=document.createElement('div');el.className='gx-node cat'+(r.unlock?' locked':'');el.style.left=x+'px';el.style.top=y+'px';el.style.zIndex=2;
-    el.innerHTML='<div class="em">'+r.em+'</div><div class="nm">'+esc(catName(r.cat))+'</div>';
-    el.addEventListener('click',()=>gxTip(x,y,r));nodes.appendChild(el);
-    if(r.winner&&pos[r.winner.card.id]){const [px,py]=pos[r.winner.card.id];const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x);l.setAttribute('y1',y);l.setAttribute('x2',px);l.setAttribute('y2',py);l.setAttribute('class','win');svg.appendChild(l);}
-    if(r.unlock&&pos[r.unlock.card.id]){const [px,py]=pos[r.unlock.card.id];const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x);l.setAttribute('y1',y);l.setAttribute('x2',px);l.setAttribute('y2',py);l.setAttribute('class','pot');svg.appendChild(l);}});
-  // strategy line
-  const top=Object.entries(winCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([id,n])=>'<b>'+esc(L(cardById(id).name).replace(/^(合庫|國泰世華|台灣大哥大|中信|元大|星展)\s?/,''))+'</b> '+n).join(' · ');
-  const k=rows.filter(r=>r.unlock).length;
-  $('#gxStrat').innerHTML=cards.length?esc(t('strat',{n:rows.length,top:''})).replace(/·\s*$/,'')+' · '+top+(k?'<br>'+esc(t('stratLock',{k})):''):esc(t('noCards'));
-  $('#gxLvl').innerHTML=$('#lvlPill').innerHTML;$('#gxLang').textContent=LANG==='zh'?'EN':'繁';
+  if(!gxStars||gxStars.W!==W){gxStars={W,list:Array.from({length:90},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.3,p:Math.random()*6.28,s:.3+Math.random()*.5}))};}
+  cancelAnimationFrame(gxRAF);let t0=null;(function frame(ts){if(!$('#galaxy').classList.contains('active'))return;t0=t0||ts;const t=(ts-t0)/1000;g.clearRect(0,0,W,H);g.fillStyle='#050607';g.fillRect(0,0,W,H);for(const s of gxStars.list){g.globalAlpha=.25+.55*Math.abs(Math.sin(t*s.s+s.p));g.fillStyle='#fff';g.beginPath();g.arc(s.x,s.y,s.r,0,6.28);g.fill();}g.globalAlpha=1;gxRAF=requestAnimationFrame(frame);})(performance.now());
+  const byCard={};rows.forEach(r=>{if(r.winner)(byCard[r.winner.card.id]=byCard[r.winner.card.id]||[]).push(r);});
+  const order=cards.slice().sort((a,b)=>(byCard[b.id]||[]).length-(byCard[a.id]||[]).length);
+  let h='';
+  order.forEach((c,i)=>{const wins=byCard[c.id]||[];let best=0;wins.forEach(r=>{if(r.winner.rule.rate>best)best=r.winner.rule.rate;});
+    h+='<div class="sb-row'+(i===0&&wins.length?' lead':'')+'" style="animation-delay:'+(i*.08)+'s" data-id="'+c.id+'">'+cardFace(c,'sb-card')+'<div class="sb-info"><div class="sb-name">'+esc(L(c.name))+'</div>'
+      +(wins.length?'<div class="sb-head"><b>'+pct(best)+'</b><span>'+esc(t('sbBest'))+' · '+esc(t('sbCats',{n:wins.length}))+'</span></div><div class="sb-chips">'+wins.sort((a,b)=>b.winner.rule.rate-a.winner.rule.rate).map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.winner.rule.rate)+'</i></span>').join('')+'</div>'
+      :'<div class="sb-chips"><span class="none">'+esc(t('sbNone'))+'</span></div>')+'</div></div>';});
+  const locked=rows.filter(r=>r.unlock);
+  if(locked.length){h+='<div class="sb-lock"><div class="h">'+esc(t('sbLock'))+' · '+locked.length+'</div><div class="sb-chips">'+locked.map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.unlock.rule.rate)+'</i><em>'+esc(shortName(r.unlock.card))+'</em></span>').join('')+'</div></div>';}
+  if(!cards.length)h='<div class="empty">'+esc(t('noCards'))+'</div>';
+  const sb=$('#sbBody');sb.innerHTML=h;sb.querySelectorAll('.sb-row').forEach(el=>el.addEventListener('click',()=>{requestTilt();cardSheet(el.dataset.id);}));
+  const top=order.slice(0,3).filter(c=>(byCard[c.id]||[]).length).map(c=>'<b>'+esc(shortName(c))+'</b> '+(byCard[c.id]||[]).length).join(' · ');
+  $('#gxStrat').innerHTML=cards.length?esc(t('strat',{n:rows.length,top:''})).replace(/·\s*$/,'')+' · '+top+(locked.length?'<br>'+esc(t('stratLock',{k:locked.length})):''):'';
+  $('#gxLvl').innerHTML=$('#lvlPill').innerHTML;$('#gxLang').textContent=LANG==='zh'?'EN':'繁';mountIcons();
 }
-function gxTip(x,y,r){clearTimeout(gxTipT);$$('.gx-tip').forEach(e=>e.remove());const d=document.createElement('div');d.className='gx-tip';d.style.left='50%';d.style.top=Math.max(90,Math.min(innerHeight-160,y-70))+'px';
-  const w=r.winner;d.innerHTML=(w?'<span>'+esc(catName(r.cat))+' → '+esc(L(w.card.name))+' '+pct(w.rule.rate)+'</span><small>'+esc(money(r.amt))+' → '+esc(money(w.reward))+(r.unlock?' · 🔓 '+esc(L(r.unlock.card.name))+' '+pct(r.unlock.rule.rate):'')+'</small>':esc(t('noCards')));
-  $('#galaxy').appendChild(d);gxTipT=setTimeout(()=>d.remove(),3200);}
 $('#gxGo').addEventListener('click',()=>{go('home');if(!camOn&&!camTried)startCam();});
 $('#gxWallet').addEventListener('click',()=>{go('wallet');renderWallet();});
 $('#gxStmt').addEventListener('click',()=>{go('statement');renderStmtIntro();});

@@ -9,7 +9,7 @@ $('#sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet();}
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function cardFace(card,cls){const art=CARD_ART[card.id];if(art)return '<div class="'+cls+'"><img src="'+art+'" alt=""></div>';return '<div class="'+cls+' solid" style="background:'+(card.color||'#333')+';color:'+(lightBg(card.color)?'#000':'#fff')+'">'+esc(L(card.name))+'</div>';}
 function lightBg(hex){if(!hex)return false;const n=parseInt(hex.slice(1),16);const r=n>>16,g=(n>>8)&255,b=n&255;return (r*299+g*587+b*114)/1000>150;}
-function applyT(){$$('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));$('#langBtn').textContent=LANG==='zh'?'EN':'繁';document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';}
+function applyT(){if(typeof mountIcons==='function')mountIcons();$$('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));$('#langBtn').textContent=LANG==='zh'?'EN':'繁';document.documentElement.lang=LANG==='zh'?'zh-Hant':'en';}
 function setLang(l){LANG=l;S.lang=l;save();applyT();renderLvl();renderHome();const act=$$('.screen.active')[0];if(act&&act.id==='wallet')renderWallet();if(act&&act.id==='statement'&&lastStmt)renderStmtResult(lastStmt);if(act&&act.id==='result'&&lastRec)renderResult(lastRec);if(act&&act.id==='galaxy')renderGalaxy();}
 $('#langBtn').addEventListener('click',()=>setLang(LANG==='zh'?'en':'zh'));
 function renderLvl(){const li=levelInfo();$('#lvlPill').innerHTML='<span>'+t('lvlShort',{n:li.n})+' '+esc(li.name)+'</span><span style="opacity:.7">·</span><span>'+money(S.saved)+'</span>';const g=$('#gxLvl');if(g)g.innerHTML=$('#lvlPill').innerHTML;}
@@ -22,7 +22,7 @@ let camOn=false,tiltOn=false,camTried=false;
 async function startCam(){camTried=true;try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw 0;const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});const v=$('#cam');v.srcObject=s;await v.play();camOn=true;document.body.classList.remove('nocam');}catch(e){camOn=false;document.body.classList.add('nocam');}renderHome();}
 function renderHome(){
   $('#homeHint').innerHTML='<b>'+esc(t('hintTitle'))+'</b>'+esc(camOn?t('hintSub'):t('hintNoCam'));
-  const sc=$('#scenes');sc.innerHTML='<span class="lab">'+esc(t('scenesLab'))+'</span>'+t('scenes').map((s,i)=>'<button data-i="'+i+'">'+s[0]+' '+esc(s[1])+'</button>').join('');
+  const sc=$('#scenes');sc.innerHTML='<span class="lab">'+esc(t('scenesLab'))+'</span>'+t('scenes').map((s,i)=>'<button data-i="'+i+'">'+esc(s[1])+'</button>').join('');
   sc.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>runScene(+b.dataset.i)));
   const st=$('#stack');const cards=walletCards();st.innerHTML='';
   const n=cards.length;
@@ -33,7 +33,7 @@ function renderHome(){
   if(!n){add.style.transform='';add.textContent='＋ '+t('addcard');}
 }
 function requestTilt(){if(tiltOn)return;const D=window.DeviceOrientationEvent;if(D&&typeof D.requestPermission==='function'){D.requestPermission().then(r=>{if(r==='granted')bindTilt();}).catch(()=>{});}else if(D){bindTilt();}}
-function bindTilt(){if(tiltOn)return;tiltOn=true;window.addEventListener('deviceorientation',e=>{const g=(e.gamma||0),b=(e.beta||0)-45;const st=$('#stack');st.style.transform='rotateY('+(g*.35)+'deg) rotateX('+(-b*.25)+'deg)';const h=$('.hero');if(h){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}},true);}
+function bindTilt(){if(tiltOn)return;tiltOn=true;window.addEventListener('deviceorientation',e=>{const g=(e.gamma||0),b=(e.beta||0)-45;const st=$('#stack');st.style.transform='rotateY('+(g*.35)+'deg) rotateX('+(-b*.25)+'deg)';const h=$('.hero');if(h){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}$$('.sb-card').forEach(el=>{el.style.transform='rotateY('+(16+g*.4)+'deg) rotateX('+(5-b*.25)+'deg)';});},true);}
 window.addEventListener('mousemove',e=>{const g=(e.clientX/innerWidth-.5)*40,b=(e.clientY/innerHeight-.5)*30;const h=$('.hero');if(h&&h.getAnimations().every(a=>a.playState==='finished')){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}});
 
 /* ---------- capture ---------- */

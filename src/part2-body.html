@@ -4,8 +4,8 @@
 <!-- GALAXY / strategy map (entry) -->
 <section id="galaxy" class="screen active">
   <canvas id="gxCv"></canvas>
-  <svg id="gxSvg"></svg>
-  <div id="gxNodes" style="position:absolute;inset:0;"></div>
+  <div class="aurora"></div>
+  <div id="sbBody"></div>
   <div class="gx-top">
     <header class="topbar">
       <div class="brand"><div class="mascot" id="gxMascot"><i></i></div><div><span data-t="app"></span><small data-t="galaxySub"></small></div></div>
@@ -14,8 +14,8 @@
     <div class="gx-strat" id="gxStrat"></div>
   </div>
   <div class="gx-bottom">
-    <div class="row"><button class="btn ghost" id="gxWallet">💳 <span data-t="wallet"></span></button><button class="btn ghost" id="gxStmt">🧾 <span data-t="stmt"></span></button></div>
-    <button class="btn accent huge" id="gxGo">📷 <span data-t="goBuy"></span> →</button>
+    <div class="row"><button class="btn ghost" id="gxWallet"><span class="ic" data-ic="wallet"></span> <span data-t="wallet"></span></button><button class="btn ghost" id="gxStmt"><span class="ic" data-ic="receipt"></span> <span data-t="stmt"></span></button></div>
+    <button class="btn accent huge" id="gxGo"><span class="ic" data-ic="camera"></span> <span data-t="goBuy"></span> →</button>
   </div>
 </section>
 
@@ -35,13 +35,13 @@
     </div>
   </header>
   <div class="hint" id="homeHint"></div>
-  <div class="typebar"><button id="typeBtn">⌨️ <span data-t="typeHint"></span></button></div>
+  <div class="typebar"><button id="typeBtn"><span class="ic" data-ic="type"></span> <span data-t="typeHint"></span></button></div>
   <div class="scenes" id="scenes"></div>
   <div id="stack"></div>
   <div class="controls">
-    <button class="side l" id="walletBtn"><span>💳</span><em data-t="wallet" style="font-style:normal"></em></button>
+    <button class="side l" id="walletBtn"><span class="ic" data-ic="wallet"></span><em data-t="wallet" style="font-style:normal"></em></button>
     <button id="shutter" aria-label="shutter"></button>
-    <button class="side r" id="stmtBtn"><span>🧾</span><em data-t="stmt" style="font-style:normal"></em></button>
+    <button class="side r" id="stmtBtn"><span class="ic" data-ic="receipt"></span><em data-t="stmt" style="font-style:normal"></em></button>
   </div>
 </section>
 
