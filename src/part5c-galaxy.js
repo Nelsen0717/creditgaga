@@ -7,25 +7,41 @@ const ICONS={wallet:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" heigh
 const ic=n=>'<span class="ic">'+(ICONS[n]||'')+'</span>';
 function mountIcons(){$$('[data-ic]').forEach(el=>{if(!el.innerHTML)el.innerHTML=ICONS[el.dataset.ic]||'';});}
 const shortName=c=>L(c.name).replace(/^(合庫|國泰世華|台灣大哥大|中信|元大|星展)\s?/,'').replace(/^(Cathay|CTBC|DBS|Yuanta|Taipei Fubon|Fubon|TCB)\s/,'');
+let wlFocus=null,wlOpened=false;
 function renderGalaxy(){
   const W=innerWidth,H=innerHeight;const cards=walletCards();const rows=strategy();
   const cv=$('#gxCv');cv.width=W*devicePixelRatio;cv.height=H*devicePixelRatio;const g=cv.getContext('2d');g.scale(devicePixelRatio,devicePixelRatio);
-  if(!gxStars||gxStars.W!==W){gxStars={W,list:Array.from({length:90},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.3,p:Math.random()*6.28,s:.3+Math.random()*.5}))};}
+  if(!gxStars||gxStars.W!==W){gxStars={W,list:Array.from({length:80},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.3,p:Math.random()*6.28,s:.3+Math.random()*.5}))};}
   cancelAnimationFrame(gxRAF);let t0=null;(function frame(ts){if(!$('#galaxy').classList.contains('active'))return;t0=t0||ts;const t=(ts-t0)/1000;g.clearRect(0,0,W,H);g.fillStyle='#050607';g.fillRect(0,0,W,H);for(const s of gxStars.list){g.globalAlpha=.25+.55*Math.abs(Math.sin(t*s.s+s.p));g.fillStyle='#fff';g.beginPath();g.arc(s.x,s.y,s.r,0,6.28);g.fill();}g.globalAlpha=1;gxRAF=requestAnimationFrame(frame);})(performance.now());
   const byCard={};rows.forEach(r=>{if(r.winner)(byCard[r.winner.card.id]=byCard[r.winner.card.id]||[]).push(r);});
   const order=cards.slice().sort((a,b)=>(byCard[b.id]||[]).length-(byCard[a.id]||[]).length);
-  let h='';
-  order.forEach((c,i)=>{const wins=byCard[c.id]||[];let best=0;wins.forEach(r=>{if(r.winner.rule.rate>best)best=r.winner.rule.rate;});
-    h+='<div class="sb-row'+(i===0&&wins.length?' lead':'')+'" style="animation-delay:'+(i*.08)+'s" data-id="'+c.id+'">'+cardFace(c,'sb-card')+'<div class="sb-info"><div class="sb-name">'+esc(L(c.name))+'</div>'
-      +(wins.length?'<div class="sb-head"><b>'+pct(best)+'</b><span>'+esc(t('sbBest'))+' · '+esc(t('sbCats',{n:wins.length}))+'</span></div><div class="sb-chips">'+wins.sort((a,b)=>b.winner.rule.rate-a.winner.rule.rate).map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.winner.rule.rate)+'</i></span>').join('')+'</div>'
-      :'<div class="sb-chips"><span class="none">'+esc(t('sbNone'))+'</span></div>')+'</div></div>';});
-  const locked=rows.filter(r=>r.unlock);
-  if(locked.length){h+='<div class="sb-lock"><div class="h">'+esc(t('sbLock'))+' · '+locked.length+'</div><div class="sb-chips">'+locked.map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.unlock.rule.rate)+'</i><em>'+esc(shortName(r.unlock.card))+'</em></span>').join('')+'</div></div>';}
-  if(!cards.length)h='<div class="empty">'+esc(t('noCards'))+'</div>';
-  const sb=$('#sbBody');sb.innerHTML=h;sb.querySelectorAll('.sb-row').forEach(el=>el.addEventListener('click',()=>{requestTilt();cardSheet(el.dataset.id);}));
-  const top=order.slice(0,3).filter(c=>(byCard[c.id]||[]).length).map(c=>'<b>'+esc(shortName(c))+'</b> '+(byCard[c.id]||[]).length).join(' · ');
-  $('#gxStrat').innerHTML=cards.length?esc(t('strat',{n:rows.length,top:''})).replace(/·\s*$/,'')+' · '+top+(locked.length?'<br>'+esc(t('stratLock',{k:locked.length})):''):'';
+  const stage=$('#wlStage');stage.querySelectorAll('.wl-card').forEach(e=>e.remove());
+  const n=order.length;const stageH=stage.clientHeight||H*.5;
+  order.forEach((c,i)=>{const el=document.createElement('div');el.className='wl-card'+(CARD_ART[c.id]?'':' solid');if(!CARD_ART[c.id]){el.style.background=c.color;el.style.color=lightBg(c.color)?'#000':'#fff';el.textContent=L(c.name);}else{el.innerHTML='<img src="'+CARD_ART[c.id]+'" alt="">';}
+    const wins=(byCard[c.id]||[]).length;if(wins)el.insertAdjacentHTML('beforeend','<b class="w">'+wins+'</b>');
+    el.dataset.id=c.id;el.style.zIndex=10+n-i;el.style.transitionDelay=(wlOpened?0:.25+i*.09)+'s';
+    el.addEventListener('click',()=>{requestTilt();wlFocus=wlFocus===c.id?null:c.id;layoutWallet(order,byCard,rows,true);});stage.appendChild(el);});
+  layoutWallet(order,byCard,rows,false);
+  if(!wlOpened){const m=$('#gxMascot');m.classList.remove('jump');void m.offsetWidth;m.classList.add('jump');mood('#gxMascot','wow');setTimeout(()=>mood('#gxMascot','happy'),900);setTimeout(()=>mood('#gxMascot',null),3200);}
+  wlOpened=true;
   $('#gxLvl').innerHTML=$('#lvlPill').innerHTML;$('#gxLang').textContent=LANG==='zh'?'EN':'繁';mountIcons();
+}
+function layoutWallet(order,byCard,rows,instant){
+  const stage=$('#wlStage');const els=[...stage.querySelectorAll('.wl-card')];const n=els.length;const stageH=stage.clientHeight||innerHeight*.5;
+  const baseY=Math.min(stageH*.46,stageH-70);   // fan centre, in px from stage top
+  const spread=Math.min(44,(innerWidth-176)/Math.max(1,n-1));
+  requestAnimationFrame(()=>{els.forEach((el,i)=>{const k=i-(n-1)/2;const focus=wlFocus===el.dataset.id;
+    if(instant)el.style.transitionDelay='0s';
+    if(wlFocus&&!focus){el.classList.add('dim');el.style.transform='translate3d('+(k*spread)+'px,'+(baseY-stageH*.14+70+Math.abs(k)*7)+'px,0) rotate('+(k*6)+'deg) scale(.86)';el.style.opacity=1;}
+    else if(focus){el.classList.remove('dim');el.style.transform='translate3d(0,'+(baseY-stageH*.14-30)+'px,0) rotate(0deg) scale(1.2)';el.style.opacity=1;el.style.zIndex=40;}
+    else{el.classList.remove('dim');el.style.transform='translate3d('+(k*spread)+'px,'+(baseY-stageH*.14+Math.abs(k)*7)+'px,0) rotate('+(k*6)+'deg) scale(1)';el.style.opacity=1;el.style.zIndex=10+n-i;}});});
+  const cards=walletCards();const lead=order[0];const wins=lead?(byCard[lead.id]||[]).length:0;const locked=rows.filter(r=>r.unlock).length;
+  let h='';
+  if(!cards.length)h='<div class="wl-head">'+esc(t('noCards'))+'</div>';
+  else if(wlFocus){const c=cardById(wlFocus);const w=(byCard[c.id]||[]).slice().sort((a,b)=>b.winner.rule.rate-a.winner.rule.rate);let best=0;w.forEach(r=>{if(r.winner.rule.rate>best)best=r.winner.rule.rate;});const lk=rows.filter(r=>r.unlock&&r.unlock.card.id===c.id).slice(0,3);
+    h='<div class="wl-focus"><div class="nm">'+esc(L(c.name))+'</div>'+(w.length?'<div class="rt">'+pct(best)+'</div><div class="sb-chips">'+w.slice(0,6).map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.winner.rule.rate)+'</i></span>').join('')+(w.length>6?'<span class="none">+'+(w.length-6)+'</span>':'')+'</div>':'<div class="sb-chips"><span class="none">'+esc(t('sbNone'))+'</span></div>')+(lk.length?'<div class="sb-chips" style="margin-top:6px">'+lk.map(r=>'<span class="lock">'+esc(catName(r.cat))+'<i>'+pct(r.unlock.rule.rate)+'</i></span>').join('')+'</div>':'')+'</div>';}
+  else h='<div class="wl-head">'+t('wlHead',{c:esc(shortName(lead)),n:wins})+(locked?'<br><span class="gold">'+esc(t('wlLock',{k:locked}))+'</span>':'')+'<br><span style="font-size:12px">'+esc(t('wlTap'))+'</span></div>';
+  $('#wlInfo').innerHTML=h;
 }
 $('#gxGo').addEventListener('click',()=>{go('home');if(!camOn&&!camTried)startCam();});
 $('#gxWallet').addEventListener('click',()=>{go('wallet');renderWallet();});

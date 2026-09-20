@@ -97,15 +97,21 @@ $('#stmtBtn').addEventListener('click',()=>{go('statement');renderStmtIntro();})
 function renderStmtIntro(){$('#stmtBody').innerHTML='<div class="page-title">'+esc(t('stmtIntro'))+'</div><div class="page-sub">'+esc(t('stmtSub'))+'</div><div class="grid-btns"><button class="btn accent" id="stShoot">'+ic('camera')+' '+esc(t('stmtShoot'))+'</button><button class="btn ghost" id="stPick">'+esc(t('stmtPick'))+'</button></div><div style="height:12px"></div><button class="btn ghost sm block" id="stSample">'+ic('receipt')+' '+esc(t('stmtSample'))+'</button>';
   $('#stShoot').addEventListener('click',async()=>{const img=await pickFile(true);if(img)stmtFlow(img);});
   $('#stPick').addEventListener('click',async()=>{const img=await pickFile(false);if(img)stmtFlow(img);});
-  $('#stSample').addEventListener('click',()=>stmtFlow(statementImage(),true));}
+  $('#stSample').addEventListener('click',()=>stmtFlow(statementImage(),true));
+  const saved=S.statements||[];
+  if(saved.length){const b=$('#stmtBody');b.insertAdjacentHTML('beforeend','<div class="h2">'+esc(t('savedStmts'))+' · '+saved.length+'</div>'+saved.map(r=>{const res=analyzeStatement(r.txns,r.cardId);const c=cardById(r.cardId);return '<div class="stmt-saved" data-sid="'+r.id+'"><div class="l"><b>'+esc(r.period||r.date)+' · '+esc(c?L(c.name):'')+'</b><small>'+r.txns.length+(LANG==='zh'?' 筆 · ':' lines · ')+esc(money(r.txns.reduce((a,x)=>a+x.amount,0)))+' · '+esc(r.date)+'</small></div><div class="v">'+esc(money(res.left))+'<small>'+esc(t('stmtLeft'))+'</small></div></div>';}).join(''));
+    b.querySelectorAll('[data-sid]').forEach(el=>el.addEventListener('click',()=>openSavedStmt(+el.dataset.sid)));}}
 async function stmtFlow(img,isSample){
   $('#resBgImg').src=img;showScan('stmtScan');
   let ex;try{ex=await readStatement(img,isSample);}catch(e){hideScan();showError(e);return;}
   hideScan();go('statement');
   const txns=(ex.transactions||[]).map(x=>({date:x.date||'',merchant:x.merchant||'',brand:x.merchant||'',category:CATS.includes(x.category)?x.category:'general',amount:+x.amount_twd||0,online:!!x.online,country:x.country||'TW'})).filter(x=>x.amount>0);
   const cardId=ex.card_id&&cardById(ex.card_id)?ex.card_id:S.defaultCard;
-  const res=analyzeStatement(txns,cardId);res.cardId=cardId;lastStmt=res;gainXP(100);renderStmtResult(res);
+  const rec={id:Date.now(),date:new Date().toISOString().slice(0,10),period:ex.period||'',cardId,txns};
+  S.statements=(S.statements||[]);S.statements.unshift(rec);S.statements=S.statements.slice(0,12);save();
+  const res=analyzeStatement(txns,cardId);res.cardId=cardId;res.recId=rec.id;lastStmt=res;gainXP(100);renderStmtResult(res);
 }
+function openSavedStmt(id){const rec=(S.statements||[]).find(x=>x.id===id);if(!rec)return;const res=analyzeStatement(rec.txns,rec.cardId);res.cardId=rec.cardId;res.recId=rec.id;lastStmt=res;renderStmtResult(res);}
 function renderStmtResult(res){
   let h='<div class="bigwrap"><div class="bigk">'+esc(t('leftTitle'))+'</div><div class="bignum mono" id="bigLeft"><small>NT$</small>0</div><div class="bigk">'+esc(t('leftSub',{a:money(res.actual),b:money(res.bestPot)}))+'</div><div class="note" style="margin-top:6px">'+esc(L(res.used.name))+' · '+res.rows.length+(LANG==='zh'?' 筆 · ':' lines · ')+money(res.total)+'</div></div>';
   // what the missed money buys in a year
@@ -127,11 +133,12 @@ function renderStmtResult(res){
   const cats=Object.entries(res.byCat).sort((a,b)=>b[1].best-a[1].best);const mx=Math.max(1,...cats.map(x=>x[1].best));
   h+='<div class="h2">'+esc(t('byCat'))+'</div><div class="bars">'+cats.map(([c,v])=>'<div class="bar"><div class="n">'+esc(catName(c))+'</div><div class="t"><div class="f" style="width:'+(v.best/mx*100)+'%"></div><div class="f dim" style="width:'+(v.actual/mx*100)+'%;margin-top:-10px"></div></div><div class="v">'+esc(money(v.best))+'</div></div>').join('')+'</div>';
   h+='<div class="h2">'+esc(t('txns'))+'</div><div>'+res.rows.map(r=>'<div class="txn"><div class="m">'+esc(r.txn.merchant)+'</div><div class="a">'+esc(money(r.txn.amount))+'</div><div class="d">'+esc(r.txn.date)+' · '+esc(catName(r.txn.category))+(r.pot?' → '+esc(L(r.pot.card.name))+' '+pct(r.pot.rule.rate):'')+'</div><div class="g'+(r.bestPot-r.actual<0.05?' z':'')+'">'+(r.bestPot-r.actual<0.05?'—':'+'+esc(money(r.bestPot-r.actual)))+'</div></div>').join('')+'</div>';
-  h+='<div style="height:16px"></div><button class="btn ghost block" id="stAgain">'+esc(t('stmtIntro'))+'</button>';
+  h+='<div style="height:16px"></div><div class="grid-btns"><button class="btn ghost block" id="stAgain">'+esc(t('stmtNew'))+'</button><button class="btn ghost block" id="stDel" style="color:var(--danger)">'+esc(t('stmtDel'))+'</button></div>';
   const b=$('#stmtBody');b.innerHTML=h;b.scrollTop=0;
   countUp($('#bigLeft'),res.left);
   b.querySelectorAll('[data-fix]').forEach(el=>el.addEventListener('click',()=>{S.flags[el.dataset.fix]=true;save();gainXP(50,t('done'));const nr=analyzeStatement(res.rows.map(r=>r.txn),res.cardId);nr.cardId=res.cardId;lastStmt=nr;renderStmtResult(nr);}));
   $('#stAgain').addEventListener('click',renderStmtIntro);
+  $('#stDel').addEventListener('click',()=>{S.statements=(S.statements||[]).filter(x=>x.id!==res.recId);save();renderStmtIntro();});
 }
 function countUp(el,v){const t0=performance.now(),dur=1400;(function f(now){const p=Math.min(1,(now-t0)/dur);const e=1-Math.pow(1-p,3);el.innerHTML='<small>NT$</small>'+num(v*e);if(p<1)requestAnimationFrame(f);})(t0);}
 

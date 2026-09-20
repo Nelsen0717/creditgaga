@@ -1,21 +1,20 @@
 <body>
 <div id="app">
 
-<!-- GALAXY / strategy map (entry) -->
+<!-- WALLET-OPEN ENTRY -->
 <section id="galaxy" class="screen active">
   <canvas id="gxCv"></canvas>
   <div class="aurora"></div>
-  <div id="sbBody"></div>
-  <div class="gx-top">
-    <header class="topbar">
-      <div class="brand"><div class="mascot" id="gxMascot"><i></i></div><div><span data-t="app"></span><small data-t="galaxySub"></small></div></div>
-      <div class="top-right"><button class="pill accent" id="gxLvl"></button><button class="icon-btn" id="gxLang">EN</button><button class="icon-btn" id="gxGear">⚙</button></div>
-    </header>
-    <div class="gx-strat" id="gxStrat"></div>
-  </div>
-  <div class="gx-bottom">
-    <div class="row"><button class="btn ghost" id="gxWallet"><span class="ic" data-ic="wallet"></span> <span data-t="wallet"></span></button><button class="btn ghost" id="gxStmt"><span class="ic" data-ic="receipt"></span> <span data-t="stmt"></span></button></div>
+  <header class="topbar">
+    <div class="brand"><div><span data-t="app"></span><small data-t="galaxySub"></small></div></div>
+    <div class="top-right"><button class="pill accent" id="gxLvl"></button><button class="icon-btn" id="gxLang">EN</button><button class="icon-btn" id="gxGear">⚙</button></div>
+  </header>
+  <div class="wl-stage" id="wlStage"><div class="mascot big wl-mascot" id="gxMascot"><i></i></div></div>
+  <div class="wl-info" id="wlInfo"></div>
+  <div class="wl-cta">
+    <button class="icon-btn" id="gxWallet" aria-label="wallet"><span class="ic" data-ic="wallet"></span></button>
     <button class="btn accent huge" id="gxGo"><span class="ic" data-ic="camera"></span> <span data-t="goBuy"></span> →</button>
+    <button class="icon-btn" id="gxStmt" aria-label="statement"><span class="ic" data-ic="receipt"></span></button>
   </div>
 </section>
 

@@ -352,26 +352,65 @@ body.nocam #shutter{background:var(--accent);box-shadow:0 0 0 4px rgba(0,0,0,.6)
 .donut .l{color:var(--danger);}
 .wcard .tag.warn{background:var(--warn);color:var(--warn-ink);}
 .fix .g{color:var(--accent);}
+
+/* WALLET-OPEN ENTRY */
+#galaxy{display:none;flex-direction:column;}
+#galaxy.active{display:flex;}
+#galaxy .topbar{position:relative;z-index:5;}
+.wl-stage{position:relative;flex:1;min-height:0;perspective:1000px;z-index:2;}
+.wl-mascot{position:absolute;left:50%;top:14%;transform:translate(-50%,-50%);z-index:1;animation:none;}
+.wl-mascot.big{width:112px;height:76px;border-radius:16px;}
+.wl-mascot.big::before,.wl-mascot.big::after{top:26px;width:13px;height:20px;}
+.wl-mascot.big::before{left:34px}.wl-mascot.big::after{left:64px}
+.wl-mascot.big i{width:26px;height:26px;right:-9px;top:-11px;}
+.wl-mascot.jump{animation:jump .7s var(--spring);}
+@keyframes jump{0%{transform:translate(-50%,-50%) scale(1)}35%{transform:translate(-50%,-70%) scale(1.08,.92)}70%{transform:translate(-50%,-46%) scale(.96,1.06)}100%{transform:translate(-50%,-50%) scale(1)}}
+.wl-card{position:absolute;left:50%;top:14%;width:164px;aspect-ratio:1.586;margin-left:-82px;margin-top:-52px;border-radius:12px;overflow:hidden;background:#222;box-shadow:0 24px 50px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08) inset;transform-origin:50% 120%;transform:translate3d(0,0,0) scale(.15);opacity:0;transition:transform .9s var(--spring),opacity .35s,filter .4s;z-index:2;}
+.wl-card img{position:absolute;left:50%;top:50%;width:63.1%;height:158.6%;transform:translate(-50%,-50%) rotate(-90deg);object-fit:cover;}
+.wl-card.solid{display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;text-align:center;padding:10px;}
+.wl-card::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.26) 48%,rgba(52,225,161,.16) 53%,rgba(255,255,255,0) 66%);mix-blend-mode:screen;}
+.wl-card .w{position:absolute;right:8px;top:8px;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:800;padding:3px 8px;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+.wl-card.dim{filter:brightness(.45) saturate(.6);}
+.wl-info{position:relative;z-index:3;padding:0 20px 8px;text-align:center;min-height:118px;}
+.wl-head{font-size:15px;color:var(--muted);font-weight:600;line-height:1.5;}
+.wl-head b{color:#fff;font-size:17px;}
+.wl-head .gold{color:var(--warn);}
+.wl-focus{animation:fadeup .35s var(--spring) both;}
+.wl-focus .nm{font-size:19px;font-weight:800;letter-spacing:-.01em;}
+.wl-focus .rt{font-size:52px;font-weight:800;letter-spacing:-.04em;color:var(--accent);line-height:1;margin:2px 0 8px;}
+.wl-focus .sb-chips{justify-content:center;}
+.wl-cta{position:relative;z-index:3;padding:6px 20px calc(var(--sab) + 16px);display:flex;gap:10px;align-items:center;}
+.wl-cta .btn.huge{flex:1;}
+.wl-cta .icon-btn{width:56px;height:56px;border-radius:18px;background:var(--surface2);flex:0 0 auto;}
+.wl-cta .icon-btn .ic{width:24px;height:24px;color:#fff;}
+#galaxy .aurora{z-index:0;}
+#gxCv{z-index:0;}
+/* saved statements */
+.stmt-saved{display:flex;gap:12px;background:var(--surface);border-radius:16px;padding:14px;margin-bottom:10px;align-items:center;}
+.stmt-saved .l{flex:1;min-width:0;}
+.stmt-saved .l b{display:block;font-size:15px;}
+.stmt-saved .l small{color:var(--muted);font-size:12.5px;}
+.stmt-saved .v{font-size:22px;font-weight:800;letter-spacing:-.03em;color:var(--danger);white-space:nowrap;}
+.stmt-saved .v small{display:block;font-size:11px;color:var(--muted);font-weight:600;text-align:right;}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- GALAXY / strategy map (entry) -->
+<!-- WALLET-OPEN ENTRY -->
 <section id="galaxy" class="screen active">
   <canvas id="gxCv"></canvas>
   <div class="aurora"></div>
-  <div id="sbBody"></div>
-  <div class="gx-top">
-    <header class="topbar">
-      <div class="brand"><div class="mascot" id="gxMascot"><i></i></div><div><span data-t="app"></span><small data-t="galaxySub"></small></div></div>
-      <div class="top-right"><button class="pill accent" id="gxLvl"></button><button class="icon-btn" id="gxLang">EN</button><button class="icon-btn" id="gxGear">⚙</button></div>
-    </header>
-    <div class="gx-strat" id="gxStrat"></div>
-  </div>
-  <div class="gx-bottom">
-    <div class="row"><button class="btn ghost" id="gxWallet"><span class="ic" data-ic="wallet"></span> <span data-t="wallet"></span></button><button class="btn ghost" id="gxStmt"><span class="ic" data-ic="receipt"></span> <span data-t="stmt"></span></button></div>
+  <header class="topbar">
+    <div class="brand"><div><span data-t="app"></span><small data-t="galaxySub"></small></div></div>
+    <div class="top-right"><button class="pill accent" id="gxLvl"></button><button class="icon-btn" id="gxLang">EN</button><button class="icon-btn" id="gxGear">⚙</button></div>
+  </header>
+  <div class="wl-stage" id="wlStage"><div class="mascot big wl-mascot" id="gxMascot"><i></i></div></div>
+  <div class="wl-info" id="wlInfo"></div>
+  <div class="wl-cta">
+    <button class="icon-btn" id="gxWallet" aria-label="wallet"><span class="ic" data-ic="wallet"></span></button>
     <button class="btn accent huge" id="gxGo"><span class="ic" data-ic="camera"></span> <span data-t="goBuy"></span> →</button>
+    <button class="icon-btn" id="gxStmt" aria-label="statement"><span class="ic" data-ic="receipt"></span></button>
   </div>
 </section>
 
@@ -456,7 +495,7 @@ const CARD_ART = {"dbs_everyday": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ
 
 /* ---------- i18n ---------- */
 const I18N={
-zh:{galaxySub:'你的卡片星系',goBuy:'我要買東西',typeHint:'或打字說一句：在 50嵐買珍奶 60 元',typeTitle:'打字告訴卡卡',typeSub:'店家、東西、大概多少錢，一句就好。',typeGo:'幫我選怎麼付',strat:'{n} 種消費 · {top}',stratLock:'解鎖後還有 {k} 種可以更好',eqTitle:'少賺的錢，一年能換什麼',eqYear:'照這個月推一整年',eqItems:[['cup','杯珍奶',60],['coffee','杯拿鐵',150],['ticket','張電影票',350],['tv','年 Netflix',4680],['headphones','副 AirPods',5990],['plane','張東京來回機票',8000],['phone','支 iPhone',30000],['bag','個名牌包',60000]],sbCats:'{n} 類消費最划算',sbBest:'最高',sbLock:'解鎖後會更好',sbNone:'目前沒有它最划算的類別',eqOf:'{n} {u}',eqTo:'離 {u} 還差 {x}',donutA:'實際拿到',donutL:'留在桌上',scanChips:['店名','金額','付款方式','你的卡'],app:'刷神卡卡',wallet:'錢包',stmt:'帳單',addcard:'加一張卡',maskTitle:'先塗掉個資',maskSub:'用手指把卡號、姓名、效期塗黑。這一步在手機裡完成，塗完才會送出。',undo:'復原',autoMask:'一鍵遮卡號區',onDevice:'🔒 只在手機內',maskDone:'塗好了，辨識卡面',stmtTitle:'留在桌上的錢',
+zh:{galaxySub:'你的卡片星系',goBuy:'我要買東西',typeHint:'或打字說一句：在 50嵐買珍奶 60 元',typeTitle:'打字告訴卡卡',typeSub:'店家、東西、大概多少錢，一句就好。',typeGo:'幫我選怎麼付',strat:'{n} 種消費 · {top}',stratLock:'解鎖後還有 {k} 種可以更好',eqTitle:'少賺的錢，一年能換什麼',eqYear:'照這個月推一整年',eqItems:[['cup','杯珍奶',60],['coffee','杯拿鐵',150],['ticket','張電影票',350],['tv','年 Netflix',4680],['headphones','副 AirPods',5990],['plane','張東京來回機票',8000],['phone','支 iPhone',30000],['bag','個名牌包',60000]],sbCats:'{n} 類消費最划算',wlHead:'主力卡 <b>{c}</b> · {n} 類消費最划算',wlLock:'{k} 種消費解鎖後更好',wlTap:'點一張卡看它擅長什麼',savedStmts:'已存的帳單',stmtLeft:'少拿',stmtNew:'再分析一張',stmtDel:'刪除',sbBest:'最高',sbLock:'解鎖後會更好',sbNone:'目前沒有它最划算的類別',eqOf:'{n} {u}',eqTo:'離 {u} 還差 {x}',donutA:'實際拿到',donutL:'留在桌上',scanChips:['店名','金額','付款方式','你的卡'],app:'刷神卡卡',wallet:'錢包',stmt:'帳單',addcard:'加一張卡',maskTitle:'先塗掉個資',maskSub:'用手指把卡號、姓名、效期塗黑。這一步在手機裡完成，塗完才會送出。',undo:'復原',autoMask:'一鍵遮卡號區',onDevice:'🔒 只在手機內',maskDone:'塗好了，辨識卡面',stmtTitle:'留在桌上的錢',
 hintTitle:'對準要買的東西',hintSub:'點一下，卡卡告訴你刷哪張。',hintNoCam:'沒相機也能玩：選一個場景',scenesLab:'模擬',
 scanning:['卡卡看看…','看店名、看價錢…','算一算你的卡…'],scanSub:'Claude 讀畫面，規則由本機算',
 useThis:'就刷這張',others:'看其他卡',retake:'再拍一次',back:'這筆拿回',theOne:'注意',unlockK:'多拿 {x} 的方法',unlockDone:'我弄好了 ✓',unlockLater:'先不管',
@@ -477,7 +516,7 @@ catNames:{general:'一般消費',convenience:'超商',drinks:'手搖飲／咖啡
 scenes:[['🧋','50嵐 手搖飲','drinks',60,'50嵐 信義店 · 珍珠奶茶 NT$60 · LINE Pay 可用'],['💻','Apple Store 信義','apple',36900,'Apple Store 信義 A13 · MacBook Air NT$36,900'],['🍣','壽司郎','dining',880,'壽司郎 台北信義店 · 結帳 NT$880 · JCB 通路'],['🧴','屈臣氏','drugstore',650,'屈臣氏 門市 · 合計 NT$650 · LINE Pay 可用'],['🏪','7-ELEVEN','convenience',120,'7-ELEVEN 統一超商 · NT$120'],['🛋️','IKEA','home',3480,'IKEA 敦北店 · NT$3,480'],['👕','UNIQLO','apparel',1990,'UNIQLO 台北信義店 · NT$1,990'],['🚃','東京 Suica 儲值','jp_transit_topup',2200,'JR 東日本 Suica チャージ ¥10,000（約 NT$2,200）'],['⛽','台塑加油','gas',1200,'台塑石油 加油站 · NT$1,200']],
 dow:['日','一','二','三','四','五','六'],
 },
-en:{galaxySub:'your card galaxy',goBuy:'I’m about to buy',typeHint:'or type it: bubble tea at 50嵐, NT$60',typeTitle:'Tell Gaga in words',typeSub:'Where, what, roughly how much. One line.',typeGo:'Pick how to pay',strat:'{n} categories · {top}',stratLock:'{k} more improve after unlocks',eqTitle:'What the missed money buys in a year',eqYear:'This month × 12',eqItems:[['cup','bubble teas',60],['coffee','lattes',150],['ticket','movie tickets',350],['tv','years of Netflix',4680],['headphones','AirPods',5990],['plane','Tokyo return flights',8000],['phone','iPhones',30000],['bag','designer bags',60000]],sbCats:'best for {n} categories',sbBest:'top',sbLock:'Better after unlocks',sbNone:'Not the best card for anything yet',eqOf:'{n} {u}',eqTo:'{x} short of {u}',donutA:'Earned',donutL:'Left on the table',scanChips:['Store','Price','Payment','Your cards'],app:'CreditGaga',wallet:'Wallet',stmt:'Statement',addcard:'Add a card',maskTitle:'Rub out the number',maskSub:'Use your thumb to black out the number, name and expiry. This happens on your phone; nothing leaves until you are done.',undo:'Undo',autoMask:'Auto-cover number area',onDevice:'🔒 On device only',maskDone:'Done, identify the card',stmtTitle:'Left on the table',
+en:{galaxySub:'your card galaxy',goBuy:'I’m about to buy',typeHint:'or type it: bubble tea at 50嵐, NT$60',typeTitle:'Tell Gaga in words',typeSub:'Where, what, roughly how much. One line.',typeGo:'Pick how to pay',strat:'{n} categories · {top}',stratLock:'{k} more improve after unlocks',eqTitle:'What the missed money buys in a year',eqYear:'This month × 12',eqItems:[['cup','bubble teas',60],['coffee','lattes',150],['ticket','movie tickets',350],['tv','years of Netflix',4680],['headphones','AirPods',5990],['plane','Tokyo return flights',8000],['phone','iPhones',30000],['bag','designer bags',60000]],sbCats:'best for {n} categories',wlHead:'Main card <b>{c}</b> · best for {n} categories',wlLock:'{k} categories improve after unlocks',wlTap:'Tap a card to see what it is best at',savedStmts:'Saved statements',stmtLeft:'left',stmtNew:'Analyze another',stmtDel:'Delete',sbBest:'top',sbLock:'Better after unlocks',sbNone:'Not the best card for anything yet',eqOf:'{n} {u}',eqTo:'{x} short of {u}',donutA:'Earned',donutL:'Left on the table',scanChips:['Store','Price','Payment','Your cards'],app:'CreditGaga',wallet:'Wallet',stmt:'Statement',addcard:'Add a card',maskTitle:'Rub out the number',maskSub:'Use your thumb to black out the number, name and expiry. This happens on your phone; nothing leaves until you are done.',undo:'Undo',autoMask:'Auto-cover number area',onDevice:'🔒 On device only',maskDone:'Done, identify the card',stmtTitle:'Left on the table',
 hintTitle:'Point at what you are buying',hintSub:'Tap. Gaga picks the card.',hintNoCam:'No camera? Pick a scene',scenesLab:'Simulate',
 scanning:['Let me look…','Reading the store and price…','Running your cards…'],scanSub:'Claude reads, your phone computes',
 useThis:'Pay with this',others:'Other cards',retake:'Retake',back:'You get back',theOne:'Note',unlockK:'Unlock {x} more',unlockDone:'Done it ✓',unlockLater:'Not now',
@@ -738,7 +777,7 @@ function renderHome(){
   if(!n){add.style.transform='';add.textContent='＋ '+t('addcard');}
 }
 function requestTilt(){if(tiltOn)return;const D=window.DeviceOrientationEvent;if(D&&typeof D.requestPermission==='function'){D.requestPermission().then(r=>{if(r==='granted')bindTilt();}).catch(()=>{});}else if(D){bindTilt();}}
-function bindTilt(){if(tiltOn)return;tiltOn=true;window.addEventListener('deviceorientation',e=>{const g=(e.gamma||0),b=(e.beta||0)-45;const st=$('#stack');st.style.transform='rotateY('+(g*.35)+'deg) rotateX('+(-b*.25)+'deg)';const h=$('.hero');if(h){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}$$('.sb-card').forEach(el=>{el.style.transform='rotateY('+(16+g*.4)+'deg) rotateX('+(5-b*.25)+'deg)';});},true);}
+function bindTilt(){if(tiltOn)return;tiltOn=true;window.addEventListener('deviceorientation',e=>{const g=(e.gamma||0),b=(e.beta||0)-45;const st=$('#stack');st.style.transform='rotateY('+(g*.35)+'deg) rotateX('+(-b*.25)+'deg)';const h=$('.hero');if(h){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}const st2=$('#wlStage');if(st2)st2.style.transform='rotateY('+(g*.25)+'deg) rotateX('+(-b*.15)+'deg)';},true);}
 window.addEventListener('mousemove',e=>{const g=(e.clientX/innerWidth-.5)*40,b=(e.clientY/innerHeight-.5)*30;const h=$('.hero');if(h&&h.getAnimations().every(a=>a.playState==='finished')){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}});
 
 /* ---------- capture ---------- */
@@ -894,15 +933,21 @@ $('#stmtBtn').addEventListener('click',()=>{go('statement');renderStmtIntro();})
 function renderStmtIntro(){$('#stmtBody').innerHTML='<div class="page-title">'+esc(t('stmtIntro'))+'</div><div class="page-sub">'+esc(t('stmtSub'))+'</div><div class="grid-btns"><button class="btn accent" id="stShoot">'+ic('camera')+' '+esc(t('stmtShoot'))+'</button><button class="btn ghost" id="stPick">'+esc(t('stmtPick'))+'</button></div><div style="height:12px"></div><button class="btn ghost sm block" id="stSample">'+ic('receipt')+' '+esc(t('stmtSample'))+'</button>';
   $('#stShoot').addEventListener('click',async()=>{const img=await pickFile(true);if(img)stmtFlow(img);});
   $('#stPick').addEventListener('click',async()=>{const img=await pickFile(false);if(img)stmtFlow(img);});
-  $('#stSample').addEventListener('click',()=>stmtFlow(statementImage(),true));}
+  $('#stSample').addEventListener('click',()=>stmtFlow(statementImage(),true));
+  const saved=S.statements||[];
+  if(saved.length){const b=$('#stmtBody');b.insertAdjacentHTML('beforeend','<div class="h2">'+esc(t('savedStmts'))+' · '+saved.length+'</div>'+saved.map(r=>{const res=analyzeStatement(r.txns,r.cardId);const c=cardById(r.cardId);return '<div class="stmt-saved" data-sid="'+r.id+'"><div class="l"><b>'+esc(r.period||r.date)+' · '+esc(c?L(c.name):'')+'</b><small>'+r.txns.length+(LANG==='zh'?' 筆 · ':' lines · ')+esc(money(r.txns.reduce((a,x)=>a+x.amount,0)))+' · '+esc(r.date)+'</small></div><div class="v">'+esc(money(res.left))+'<small>'+esc(t('stmtLeft'))+'</small></div></div>';}).join(''));
+    b.querySelectorAll('[data-sid]').forEach(el=>el.addEventListener('click',()=>openSavedStmt(+el.dataset.sid)));}}
 async function stmtFlow(img,isSample){
   $('#resBgImg').src=img;showScan('stmtScan');
   let ex;try{ex=await readStatement(img,isSample);}catch(e){hideScan();showError(e);return;}
   hideScan();go('statement');
   const txns=(ex.transactions||[]).map(x=>({date:x.date||'',merchant:x.merchant||'',brand:x.merchant||'',category:CATS.includes(x.category)?x.category:'general',amount:+x.amount_twd||0,online:!!x.online,country:x.country||'TW'})).filter(x=>x.amount>0);
   const cardId=ex.card_id&&cardById(ex.card_id)?ex.card_id:S.defaultCard;
-  const res=analyzeStatement(txns,cardId);res.cardId=cardId;lastStmt=res;gainXP(100);renderStmtResult(res);
+  const rec={id:Date.now(),date:new Date().toISOString().slice(0,10),period:ex.period||'',cardId,txns};
+  S.statements=(S.statements||[]);S.statements.unshift(rec);S.statements=S.statements.slice(0,12);save();
+  const res=analyzeStatement(txns,cardId);res.cardId=cardId;res.recId=rec.id;lastStmt=res;gainXP(100);renderStmtResult(res);
 }
+function openSavedStmt(id){const rec=(S.statements||[]).find(x=>x.id===id);if(!rec)return;const res=analyzeStatement(rec.txns,rec.cardId);res.cardId=rec.cardId;res.recId=rec.id;lastStmt=res;renderStmtResult(res);}
 function renderStmtResult(res){
   let h='<div class="bigwrap"><div class="bigk">'+esc(t('leftTitle'))+'</div><div class="bignum mono" id="bigLeft"><small>NT$</small>0</div><div class="bigk">'+esc(t('leftSub',{a:money(res.actual),b:money(res.bestPot)}))+'</div><div class="note" style="margin-top:6px">'+esc(L(res.used.name))+' · '+res.rows.length+(LANG==='zh'?' 筆 · ':' lines · ')+money(res.total)+'</div></div>';
   // what the missed money buys in a year
@@ -924,11 +969,12 @@ function renderStmtResult(res){
   const cats=Object.entries(res.byCat).sort((a,b)=>b[1].best-a[1].best);const mx=Math.max(1,...cats.map(x=>x[1].best));
   h+='<div class="h2">'+esc(t('byCat'))+'</div><div class="bars">'+cats.map(([c,v])=>'<div class="bar"><div class="n">'+esc(catName(c))+'</div><div class="t"><div class="f" style="width:'+(v.best/mx*100)+'%"></div><div class="f dim" style="width:'+(v.actual/mx*100)+'%;margin-top:-10px"></div></div><div class="v">'+esc(money(v.best))+'</div></div>').join('')+'</div>';
   h+='<div class="h2">'+esc(t('txns'))+'</div><div>'+res.rows.map(r=>'<div class="txn"><div class="m">'+esc(r.txn.merchant)+'</div><div class="a">'+esc(money(r.txn.amount))+'</div><div class="d">'+esc(r.txn.date)+' · '+esc(catName(r.txn.category))+(r.pot?' → '+esc(L(r.pot.card.name))+' '+pct(r.pot.rule.rate):'')+'</div><div class="g'+(r.bestPot-r.actual<0.05?' z':'')+'">'+(r.bestPot-r.actual<0.05?'—':'+'+esc(money(r.bestPot-r.actual)))+'</div></div>').join('')+'</div>';
-  h+='<div style="height:16px"></div><button class="btn ghost block" id="stAgain">'+esc(t('stmtIntro'))+'</button>';
+  h+='<div style="height:16px"></div><div class="grid-btns"><button class="btn ghost block" id="stAgain">'+esc(t('stmtNew'))+'</button><button class="btn ghost block" id="stDel" style="color:var(--danger)">'+esc(t('stmtDel'))+'</button></div>';
   const b=$('#stmtBody');b.innerHTML=h;b.scrollTop=0;
   countUp($('#bigLeft'),res.left);
   b.querySelectorAll('[data-fix]').forEach(el=>el.addEventListener('click',()=>{S.flags[el.dataset.fix]=true;save();gainXP(50,t('done'));const nr=analyzeStatement(res.rows.map(r=>r.txn),res.cardId);nr.cardId=res.cardId;lastStmt=nr;renderStmtResult(nr);}));
   $('#stAgain').addEventListener('click',renderStmtIntro);
+  $('#stDel').addEventListener('click',()=>{S.statements=(S.statements||[]).filter(x=>x.id!==res.recId);save();renderStmtIntro();});
 }
 function countUp(el,v){const t0=performance.now(),dur=1400;(function f(now){const p=Math.min(1,(now-t0)/dur);const e=1-Math.pow(1-p,3);el.innerHTML='<small>NT$</small>'+num(v*e);if(p<1)requestAnimationFrame(f);})(t0);}
 
@@ -956,25 +1002,41 @@ const ICONS={wallet:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" heigh
 const ic=n=>'<span class="ic">'+(ICONS[n]||'')+'</span>';
 function mountIcons(){$$('[data-ic]').forEach(el=>{if(!el.innerHTML)el.innerHTML=ICONS[el.dataset.ic]||'';});}
 const shortName=c=>L(c.name).replace(/^(合庫|國泰世華|台灣大哥大|中信|元大|星展)\s?/,'').replace(/^(Cathay|CTBC|DBS|Yuanta|Taipei Fubon|Fubon|TCB)\s/,'');
+let wlFocus=null,wlOpened=false;
 function renderGalaxy(){
   const W=innerWidth,H=innerHeight;const cards=walletCards();const rows=strategy();
   const cv=$('#gxCv');cv.width=W*devicePixelRatio;cv.height=H*devicePixelRatio;const g=cv.getContext('2d');g.scale(devicePixelRatio,devicePixelRatio);
-  if(!gxStars||gxStars.W!==W){gxStars={W,list:Array.from({length:90},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.3,p:Math.random()*6.28,s:.3+Math.random()*.5}))};}
+  if(!gxStars||gxStars.W!==W){gxStars={W,list:Array.from({length:80},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+.3,p:Math.random()*6.28,s:.3+Math.random()*.5}))};}
   cancelAnimationFrame(gxRAF);let t0=null;(function frame(ts){if(!$('#galaxy').classList.contains('active'))return;t0=t0||ts;const t=(ts-t0)/1000;g.clearRect(0,0,W,H);g.fillStyle='#050607';g.fillRect(0,0,W,H);for(const s of gxStars.list){g.globalAlpha=.25+.55*Math.abs(Math.sin(t*s.s+s.p));g.fillStyle='#fff';g.beginPath();g.arc(s.x,s.y,s.r,0,6.28);g.fill();}g.globalAlpha=1;gxRAF=requestAnimationFrame(frame);})(performance.now());
   const byCard={};rows.forEach(r=>{if(r.winner)(byCard[r.winner.card.id]=byCard[r.winner.card.id]||[]).push(r);});
   const order=cards.slice().sort((a,b)=>(byCard[b.id]||[]).length-(byCard[a.id]||[]).length);
-  let h='';
-  order.forEach((c,i)=>{const wins=byCard[c.id]||[];let best=0;wins.forEach(r=>{if(r.winner.rule.rate>best)best=r.winner.rule.rate;});
-    h+='<div class="sb-row'+(i===0&&wins.length?' lead':'')+'" style="animation-delay:'+(i*.08)+'s" data-id="'+c.id+'">'+cardFace(c,'sb-card')+'<div class="sb-info"><div class="sb-name">'+esc(L(c.name))+'</div>'
-      +(wins.length?'<div class="sb-head"><b>'+pct(best)+'</b><span>'+esc(t('sbBest'))+' · '+esc(t('sbCats',{n:wins.length}))+'</span></div><div class="sb-chips">'+wins.sort((a,b)=>b.winner.rule.rate-a.winner.rule.rate).map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.winner.rule.rate)+'</i></span>').join('')+'</div>'
-      :'<div class="sb-chips"><span class="none">'+esc(t('sbNone'))+'</span></div>')+'</div></div>';});
-  const locked=rows.filter(r=>r.unlock);
-  if(locked.length){h+='<div class="sb-lock"><div class="h">'+esc(t('sbLock'))+' · '+locked.length+'</div><div class="sb-chips">'+locked.map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.unlock.rule.rate)+'</i><em>'+esc(shortName(r.unlock.card))+'</em></span>').join('')+'</div></div>';}
-  if(!cards.length)h='<div class="empty">'+esc(t('noCards'))+'</div>';
-  const sb=$('#sbBody');sb.innerHTML=h;sb.querySelectorAll('.sb-row').forEach(el=>el.addEventListener('click',()=>{requestTilt();cardSheet(el.dataset.id);}));
-  const top=order.slice(0,3).filter(c=>(byCard[c.id]||[]).length).map(c=>'<b>'+esc(shortName(c))+'</b> '+(byCard[c.id]||[]).length).join(' · ');
-  $('#gxStrat').innerHTML=cards.length?esc(t('strat',{n:rows.length,top:''})).replace(/·\s*$/,'')+' · '+top+(locked.length?'<br>'+esc(t('stratLock',{k:locked.length})):''):'';
+  const stage=$('#wlStage');stage.querySelectorAll('.wl-card').forEach(e=>e.remove());
+  const n=order.length;const stageH=stage.clientHeight||H*.5;
+  order.forEach((c,i)=>{const el=document.createElement('div');el.className='wl-card'+(CARD_ART[c.id]?'':' solid');if(!CARD_ART[c.id]){el.style.background=c.color;el.style.color=lightBg(c.color)?'#000':'#fff';el.textContent=L(c.name);}else{el.innerHTML='<img src="'+CARD_ART[c.id]+'" alt="">';}
+    const wins=(byCard[c.id]||[]).length;if(wins)el.insertAdjacentHTML('beforeend','<b class="w">'+wins+'</b>');
+    el.dataset.id=c.id;el.style.zIndex=10+n-i;el.style.transitionDelay=(wlOpened?0:.25+i*.09)+'s';
+    el.addEventListener('click',()=>{requestTilt();wlFocus=wlFocus===c.id?null:c.id;layoutWallet(order,byCard,rows,true);});stage.appendChild(el);});
+  layoutWallet(order,byCard,rows,false);
+  if(!wlOpened){const m=$('#gxMascot');m.classList.remove('jump');void m.offsetWidth;m.classList.add('jump');mood('#gxMascot','wow');setTimeout(()=>mood('#gxMascot','happy'),900);setTimeout(()=>mood('#gxMascot',null),3200);}
+  wlOpened=true;
   $('#gxLvl').innerHTML=$('#lvlPill').innerHTML;$('#gxLang').textContent=LANG==='zh'?'EN':'繁';mountIcons();
+}
+function layoutWallet(order,byCard,rows,instant){
+  const stage=$('#wlStage');const els=[...stage.querySelectorAll('.wl-card')];const n=els.length;const stageH=stage.clientHeight||innerHeight*.5;
+  const baseY=Math.min(stageH*.46,stageH-70);   // fan centre, in px from stage top
+  const spread=Math.min(44,(innerWidth-176)/Math.max(1,n-1));
+  requestAnimationFrame(()=>{els.forEach((el,i)=>{const k=i-(n-1)/2;const focus=wlFocus===el.dataset.id;
+    if(instant)el.style.transitionDelay='0s';
+    if(wlFocus&&!focus){el.classList.add('dim');el.style.transform='translate3d('+(k*spread)+'px,'+(baseY-stageH*.14+70+Math.abs(k)*7)+'px,0) rotate('+(k*6)+'deg) scale(.86)';el.style.opacity=1;}
+    else if(focus){el.classList.remove('dim');el.style.transform='translate3d(0,'+(baseY-stageH*.14-30)+'px,0) rotate(0deg) scale(1.2)';el.style.opacity=1;el.style.zIndex=40;}
+    else{el.classList.remove('dim');el.style.transform='translate3d('+(k*spread)+'px,'+(baseY-stageH*.14+Math.abs(k)*7)+'px,0) rotate('+(k*6)+'deg) scale(1)';el.style.opacity=1;el.style.zIndex=10+n-i;}});});
+  const cards=walletCards();const lead=order[0];const wins=lead?(byCard[lead.id]||[]).length:0;const locked=rows.filter(r=>r.unlock).length;
+  let h='';
+  if(!cards.length)h='<div class="wl-head">'+esc(t('noCards'))+'</div>';
+  else if(wlFocus){const c=cardById(wlFocus);const w=(byCard[c.id]||[]).slice().sort((a,b)=>b.winner.rule.rate-a.winner.rule.rate);let best=0;w.forEach(r=>{if(r.winner.rule.rate>best)best=r.winner.rule.rate;});const lk=rows.filter(r=>r.unlock&&r.unlock.card.id===c.id).slice(0,3);
+    h='<div class="wl-focus"><div class="nm">'+esc(L(c.name))+'</div>'+(w.length?'<div class="rt">'+pct(best)+'</div><div class="sb-chips">'+w.slice(0,6).map(r=>'<span>'+esc(catName(r.cat))+'<i>'+pct(r.winner.rule.rate)+'</i></span>').join('')+(w.length>6?'<span class="none">+'+(w.length-6)+'</span>':'')+'</div>':'<div class="sb-chips"><span class="none">'+esc(t('sbNone'))+'</span></div>')+(lk.length?'<div class="sb-chips" style="margin-top:6px">'+lk.map(r=>'<span class="lock">'+esc(catName(r.cat))+'<i>'+pct(r.unlock.rule.rate)+'</i></span>').join('')+'</div>':'')+'</div>';}
+  else h='<div class="wl-head">'+t('wlHead',{c:esc(shortName(lead)),n:wins})+(locked?'<br><span class="gold">'+esc(t('wlLock',{k:locked}))+'</span>':'')+'<br><span style="font-size:12px">'+esc(t('wlTap'))+'</span></div>';
+  $('#wlInfo').innerHTML=h;
 }
 $('#gxGo').addEventListener('click',()=>{go('home');if(!camOn&&!camTried)startCam();});
 $('#gxWallet').addEventListener('click',()=>{go('wallet');renderWallet();});
