@@ -36,8 +36,8 @@ function renderHome(){
   if(!n){add.style.transform='';add.textContent='＋ '+t('addcard');}
 }
 function requestTilt(){if(tiltOn)return;const D=window.DeviceOrientationEvent;if(D&&typeof D.requestPermission==='function'){D.requestPermission().then(r=>{if(r==='granted')bindTilt();}).catch(()=>{});}else if(D){bindTilt();}}
-function bindTilt(){if(tiltOn)return;tiltOn=true;window.addEventListener('deviceorientation',e=>{const g=(e.gamma||0),b=(e.beta||0)-45;const st=$('#stack');st.style.transform='rotateY('+(g*.35)+'deg) rotateX('+(-b*.25)+'deg)';const h=$('.hero');if(h){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}const st2=$('#wlStage');if(st2)st2.style.transform='rotateY('+(g*.25)+'deg) rotateX('+(-b*.15)+'deg)';},true);}
-window.addEventListener('mousemove',e=>{const g=(e.clientX/innerWidth-.5)*40,b=(e.clientY/innerHeight-.5)*30;const h=$('.hero');if(h&&h.getAnimations().every(a=>a.playState==='finished')){h.style.transform='rotateY('+(g*.5)+'deg) rotateX('+(-b*.35)+'deg)';h.style.setProperty('--shx',(50+g*2.5)+'%');}});
+function bindTilt(){if(tiltOn)return;tiltOn=true;window.addEventListener('deviceorientation',e=>{const g=(e.gamma||0),b=(e.beta||0)-45;const st=$('#stack');st.style.transform='rotateY('+(g*.35)+'deg) rotateX('+(-b*.25)+'deg)';const h=$('.hero');if(h){h.style.setProperty('--shx',(50+g*2.5)+'%');}const st2=$('#wlStage');if(st2)st2.style.transform='rotateY('+(g*.25)+'deg) rotateX('+(-b*.15)+'deg)';},true);}
+window.addEventListener('mousemove',e=>{const g=(e.clientX/innerWidth-.5)*40,b=(e.clientY/innerHeight-.5)*30;const h=$('.hero');if(h){h.style.setProperty('--shx',(50+g*2.5)+'%');}});
 
 /* ---------- capture ---------- */
 function snapshot(){const v=$('#cam');const c=$('#work');const w=v.videoWidth||1280,h=v.videoHeight||720;const s=Math.min(1,1280/Math.max(w,h));c.width=Math.round(w*s);c.height=Math.round(h*s);c.getContext('2d').drawImage(v,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.82);}
