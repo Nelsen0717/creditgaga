@@ -1,15 +1,33 @@
 <body>
 <div id="app">
 
+<!-- GALAXY / strategy map (entry) -->
+<section id="galaxy" class="screen active">
+  <canvas id="gxCv"></canvas>
+  <svg id="gxSvg"></svg>
+  <div id="gxNodes" style="position:absolute;inset:0;"></div>
+  <div class="gx-top">
+    <header class="topbar">
+      <div class="brand"><div class="mascot" id="gxMascot"><i></i></div><div><span data-t="app"></span><small data-t="galaxySub"></small></div></div>
+      <div class="top-right"><button class="pill accent" id="gxLvl"></button><button class="icon-btn" id="gxLang">EN</button><button class="icon-btn" id="gxGear">⚙</button></div>
+    </header>
+    <div class="gx-strat" id="gxStrat"></div>
+  </div>
+  <div class="gx-bottom">
+    <div class="row"><button class="btn ghost" id="gxWallet">💳 <span data-t="wallet"></span></button><button class="btn ghost" id="gxStmt">🧾 <span data-t="stmt"></span></button></div>
+    <button class="btn accent huge" id="gxGo">📷 <span data-t="goBuy"></span> →</button>
+  </div>
+</section>
+
 <!-- HOME / VIEWFINDER -->
-<section id="home" class="screen active">
+<section id="home" class="screen">
   <div class="vf-bg"></div>
   <video id="cam" autoplay playsinline muted></video>
   <canvas id="freeze"></canvas>
   <div class="vf-grad"></div>
   <div class="vf-frame"><i></i><i></i><i></i><i></i></div>
   <header class="topbar">
-    <div class="brand"><div class="mascot"><i></i></div><div><span data-t="app"></span><small>creditgaga</small></div></div>
+    <button class="icon-btn" id="homeBack">←</button>
     <div class="top-right">
       <button class="pill accent" id="lvlPill"></button>
       <button class="icon-btn" id="langBtn">EN</button>
@@ -17,6 +35,7 @@
     </div>
   </header>
   <div class="hint" id="homeHint"></div>
+  <div class="typebar"><button id="typeBtn">⌨️ <span data-t="typeHint"></span></button></div>
   <div class="scenes" id="scenes"></div>
   <div id="stack"></div>
   <div class="controls">
@@ -34,7 +53,7 @@
     <div class="who"><b id="resMerchant"></b><span id="resAmt"></span></div>
     <button class="icon-btn" id="resEdit">✎</button>
   </div>
-  <div class="scan" id="scanUI"><div class="laser"></div><div class="mascot big"><i></i></div><div class="txt" id="scanTxt"></div><div class="sub" id="scanSub"></div></div>
+  <div class="scan" id="scanUI"><div class="laser"></div><div class="ring"></div><div class="mascot big think" id="scanMascot"><i></i></div><div class="txt" id="scanTxt"></div><div class="sub" id="scanSub"></div><div class="chips" id="scanChips"></div></div>
   <div class="res-body" id="resBody"></div>
 </section>
 

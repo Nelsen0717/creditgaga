@@ -108,6 +108,16 @@ async function stmtFlow(img,isSample){
 }
 function renderStmtResult(res){
   let h='<div class="bigwrap"><div class="bigk">'+esc(t('leftTitle'))+'</div><div class="bignum mono" id="bigLeft"><small>NT$</small>0</div><div class="bigk">'+esc(t('leftSub',{a:money(res.actual),b:money(res.bestPot)}))+'</div><div class="note" style="margin-top:6px">'+esc(L(res.used.name))+' · '+res.rows.length+(LANG==='zh'?' 筆 · ':' lines · ')+money(res.total)+'</div></div>';
+  // what the missed money buys in a year
+  const year=res.left*12;const items=t('eqItems');
+  h+='<div class="h2">'+esc(t('eqTitle'))+'</div><div class="eq-wrap"><div class="eq-year">'+esc(t('eqYear'))+'<b class="mono">'+esc(money(year))+'</b></div>';
+  const cupsN=Math.min(60,Math.floor(year/items[0][2]));h+='<div class="cups">'+Array.from({length:60},(_,i)=>'<i class="'+(i<cupsN?'':'g')+'" style="animation-delay:'+(i*25)+'ms"></i>').join('')+'</div><div class="note" style="margin-top:6px">'+esc(t('eqOf',{n:Math.floor(year/items[0][2]),u:items[0][1]}))+' '+items[0][0]+'</div>';
+  const pick=[];for(const it of items.slice(1)){if(year>=it[2])pick.push({it,n:Math.floor(year/it[2]),p:1});else pick.push({it,n:0,p:year/it[2]});}
+  const shown=pick.filter(x=>x.n>0).slice(-3).concat(pick.filter(x=>x.n===0).slice(0,1));
+  h+='<div class="eq-grid">'+shown.map(x=>'<div class="eq'+(x.n?'':' locked')+'"><div class="em">'+x.it[0]+'</div><div class="n">'+(x.n?esc(t('eqOf',{n:x.n,u:x.it[1]})):Math.round(x.p*100)+'%')+'</div><div class="l">'+(x.n?'≈ '+esc(money(x.it[2]))+' / 1':esc(t('eqTo',{u:'1 '+x.it[1],x:money(x.it[2]-year)})))+'</div><div class="p" style="width:'+Math.round(x.p*100)+'%"></div></div>').join('')+'</div></div>';
+  // donut: earned vs left
+  const tot=Math.max(1,res.bestPot),ea=res.actual/tot;const C=2*Math.PI*34;
+  h+='<div class="donut" style="margin-top:12px"><svg viewBox="0 0 84 84"><circle cx="42" cy="42" r="34" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="12"/><circle cx="42" cy="42" r="34" fill="none" stroke="#30e3a2" stroke-width="12" stroke-dasharray="'+(C*(1-ea))+' '+C+'" stroke-dashoffset="'+(-C*ea)+'"/><circle cx="42" cy="42" r="34" fill="none" stroke="#fff" stroke-width="12" stroke-dasharray="'+(C*ea)+' '+C+'"/></svg><div class="tx"><b>'+Math.round((1-ea)*100)+'%</b> '+esc(t('donutL'))+' · '+esc(money(res.left))+'<br>'+esc(t('donutA'))+' '+esc(money(res.actual))+' · '+Math.round(ea*100)+'%</div></div>';
   h+='<div class="h2">'+esc(t('fixes'))+'</div>'+res.fixes.map((f,i)=>{let title='',sub='';const m=f.meta;
     if(f.key.startsWith('switch:')){title=(LANG==='zh'?'把日常消費改刷 ':'Move everyday spend to ')+L(m.card.name);sub=(LANG==='zh'?'原本刷 ':'Instead of ')+L(m.from.name)+' · '+f.n+(LANG==='zh'?' 筆':' lines');}
     else if(f.key.startsWith('plan:')){title=L(m.card.name)+(LANG==='zh'?' 依當天消費切方案':' switch plan per day');sub=L(m.req.howto);}

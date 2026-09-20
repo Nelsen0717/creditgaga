@@ -33,6 +33,16 @@ async function readPurchase(dataURL,hint,demo){
   const content=[img(dataURL),{type:'text',text:hint?'Hint from the user or scene: '+hint:'No hint. Read the photo.'}];
   return claudeTool(sys,content,tool);
 }
+/* text purchase (typed / dictated): Claude parses when a key exists, local parser otherwise */
+async function readPurchaseText(text){
+  if(S.demo||!S.apiKey)return localParse(text);
+  const tool={name:'purchase_context',description:'Structured description of what the user is about to buy, from a short sentence.',input_schema:{type:'object',properties:{
+    merchant:{type:'string'},brand:{type:'string',description:'Normalized chain/brand keyword, e.g. "7-ELEVEN", "50嵐", "Apple Store".'},
+    category:{type:'string',enum:CAT_ENUM},amount_twd:{type:['number','null'],description:'NT$ total if stated; convert JPY at 0.22, USD at 32. null if not stated.'},
+    country:{type:'string'},online:{type:'boolean'},payment_methods:{type:'array',items:{type:'string',enum:['card','linepay','applepay','jkopay','cash']}},items:{type:'string'},confidence:{type:'number'}},required:['merchant','brand','category','amount_twd','country','online','payment_methods','items','confidence']}};
+  const sys='You are the eyes and ears of CreditGaga, a Taiwan credit-card helper. The user typed or dictated one sentence about what they are about to buy (Chinese or English, may contain speech-to-text errors). Extract merchant, category, NT$ amount, country, whether it is online. Never invent an amount. You only READ; the phone computes rewards.';
+  try{return await claudeTool(sys,[{type:'text',text:'Sentence: '+text}],tool);}catch(e){if(String(e.message).startsWith('NOKEY'))throw e;const lp=localParse(text);lp.fallback=String(e.message);return lp;}
+}
 /* card identification from art only */
 async function identifyCard(dataURL,demoId){
   if(S.demo||!S.apiKey){if(demoId)return {matched_card_id:demoId,confidence:0.97,bank_guess:'',card_name_guess:''};if(!S.apiKey)throw new Error('NOKEY');}
@@ -85,7 +95,7 @@ function wrap(x,text,cx,y,w,lh){const words=text.split(' ');let line='';for(cons
 function statementImage(){const c=$('#work');c.width=1000;c.height=1500;const x=c.getContext('2d');x.fillStyle='#f4f4f2';x.fillRect(0,0,1000,1500);x.fillStyle='#b22228';x.fillRect(0,0,1000,120);x.fillStyle='#fff';x.font='bold 44px -apple-system, PingFang TC, sans-serif';x.textAlign='left';x.fillText('星展銀行 DBS  信用卡帳單',50,78);x.fillStyle='#222';x.font='bold 34px -apple-system, PingFang TC, sans-serif';x.fillText('everyday 威士御璽卡  帳單月份 2026/08',50,190);x.font='26px -apple-system, PingFang TC, sans-serif';x.fillStyle='#666';x.fillText('卡號 **** **** **** 0000   持卡人 ****',50,236);x.fillStyle='#222';x.font='bold 28px -apple-system, PingFang TC, sans-serif';x.fillText('消費日',50,320);x.fillText('消費明細',220,320);x.textAlign='right';x.fillText('金額 NT$',950,320);x.strokeStyle='#999';x.lineWidth=2;x.beginPath();x.moveTo(50,340);x.lineTo(950,340);x.stroke();x.font='28px -apple-system, PingFang TC, sans-serif';let y=395,tot=0;for(const t of SAMPLE_TXNS){x.textAlign='left';x.fillStyle='#333';x.fillText(t[0],50,y);x.fillText(t[1],220,y);x.textAlign='right';x.fillText(t[3].toLocaleString('en-US'),950,y);tot+=t[3];y+=58;}x.beginPath();x.moveTo(50,y-20);x.lineTo(950,y-20);x.stroke();x.font='bold 32px -apple-system, PingFang TC, sans-serif';x.fillStyle='#222';x.textAlign='left';x.fillText('本期新增消費合計',50,y+30);x.textAlign='right';x.fillText(tot.toLocaleString('en-US'),950,y+30);x.font='22px -apple-system, sans-serif';x.fillStyle='#888';x.textAlign='left';x.fillText('※ 範例帳單（示意）',50,y+90);return c.toDataURL('image/jpeg',.85);}
 
 /* ---------- INIT ---------- */
-applyT();renderLvl();renderHome();startCam();
+applyT();renderLvl();renderHome();go('galaxy');
 window.addEventListener('resize',()=>{});
 </script>
 </body>
