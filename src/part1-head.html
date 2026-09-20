@@ -422,5 +422,34 @@ body.nocam #shutter{background:linear-gradient(180deg,#4bf0b6,#2fd898);}
 .typebar button{box-shadow:0 2px 0 rgba(0,0,0,.4);}
 .seg button.on{background:linear-gradient(180deg,#fff,#e9ecf1);box-shadow:0 2px 0 #aab0ba;}
 .mask-tools .row .btn.sm{flex:0 0 auto;}
+
+/* TOUCH FEEDBACK — visible on a mirrored screen */
+.tap-ripple{position:fixed;left:0;top:0;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:rgba(52,225,161,.55);box-shadow:0 0 0 2px rgba(52,225,161,.9);pointer-events:none;z-index:999;animation:ripple .55s ease-out forwards;}
+@keyframes ripple{0%{transform:scale(.6);opacity:1}100%{transform:scale(4.2);opacity:0}}
+.pressed{animation:pressflash .42s ease-out;}
+@keyframes pressflash{0%{filter:brightness(1.6);box-shadow:0 0 0 0 rgba(52,225,161,.8)}100%{filter:brightness(1);box-shadow:0 0 0 14px rgba(52,225,161,0)}}
+.btn.pressed,.icon-btn.pressed,.pill.pressed,.scenes button.pressed,.controls .side.pressed,.typebar button.pressed{animation:pressflash .42s ease-out,pressbump .3s var(--spring);}
+@keyframes pressbump{0%{transform:scale(.93)}100%{transform:scale(1)}}
+.stk.pressed,.wl-card.pressed,.wcard.pressed,.quest.pressed,.samples button.pressed,.stmt-saved.pressed,.hist.pressed{outline:3px solid var(--accent);outline-offset:3px;}
+/* READ STRIP on result */
+.read{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin:4px 0 6px;animation:fadeup .35s both;}
+.read .k{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);white-space:nowrap;}
+.read .m{flex:1;min-width:0;}
+.read .m b{display:block;font-size:20px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.read .m span{font-size:15px;color:var(--muted);font-weight:600;}
+.read .m span i{font-style:normal;color:#fff;}
+.read .e{height:38px;padding:0 12px;border-radius:12px;background:#fff;color:#000;font-size:14px;font-weight:800;display:inline-flex;align-items:center;white-space:nowrap;box-shadow:0 3px 0 #aab0ba;}
+.res-top .who{display:none;}
+/* history */
+.hist{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:16px;padding:12px 14px;margin-bottom:8px;}
+.hist .thumb{width:54px;height:34px;border-radius:5px;overflow:hidden;background:#333;flex:0 0 auto;position:relative;}
+.hist .thumb img{position:absolute;left:50%;top:50%;width:63.1%;height:158.6%;transform:translate(-50%,-50%) rotate(-90deg);object-fit:cover;}
+.hist .tx{flex:1;min-width:0;}
+.hist .tx b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hist .tx small{display:block;color:var(--muted);font-size:12.5px;}
+.hist .r{text-align:right;white-space:nowrap;}
+.hist .r b{display:block;font-size:17px;font-weight:800;letter-spacing:-.02em;color:var(--accent);}
+.hist .r small{font-size:11px;color:var(--muted);font-weight:700;}
+.hist.used .r small{color:var(--accent);}
 </style>
 </head>

@@ -14,6 +14,9 @@ function setLang(l){LANG=l;S.lang=l;save();applyT();renderLvl();renderHome();con
 $('#langBtn').addEventListener('click',()=>setLang(LANG==='zh'?'en':'zh'));
 function renderLvl(){const li=levelInfo();$('#lvlPill').innerHTML='<span>'+t('lvlShort',{n:li.n})+' '+esc(li.name)+'</span><span style="opacity:.7">·</span><span>'+money(S.saved)+'</span>';const g=$('#gxLvl');if(g)g.innerHTML=$('#lvlPill').innerHTML;}
 
+/* global touch feedback: ripple at the touch point + flash on the pressed control */
+document.addEventListener('pointerdown',e=>{const r=document.createElement('div');r.className='tap-ripple';r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';document.body.appendChild(r);setTimeout(()=>r.remove(),600);
+  const el=e.target.closest('button,.btn,.icon-btn,.pill,.stk,.wl-card,.wcard,.quest,.samples button,.stmt-saved,.hist,.alt,.tap');if(el){el.classList.remove('pressed');void el.offsetWidth;el.classList.add('pressed');setTimeout(()=>el.classList.remove('pressed'),450);}},{passive:true});
 /* confetti (accent only, brief) */
 function confetti(){const cv=$('#confetti'),ctx=cv.getContext('2d');cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);const P=[];for(let i=0;i<70;i++)P.push({x:innerWidth/2,y:innerHeight*.45,vx:(Math.random()-.5)*14,vy:-Math.random()*14-4,r:3+Math.random()*4,a:1,c:Math.random()<.7?'#30e3a2':'#fff'});let f=0;(function step(){ctx.clearRect(0,0,innerWidth,innerHeight);f++;for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=.45;p.vx*=.98;p.a-=.016;ctx.globalAlpha=Math.max(0,p.a);ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,p.r,p.r*1.6);}if(f<80)requestAnimationFrame(step);else ctx.clearRect(0,0,innerWidth,innerHeight);})();}
 
@@ -63,10 +66,13 @@ async function analyzePurchase(img,hint,demo){
   finishPurchase(ctx);
 }
 function askAmount(ctx){sheet('<h3>'+esc(t('amtTitle'))+'</h3><p>'+esc(ctx.merchant||'')+' · '+esc(t('amtSub'))+'</p><div class="field"><input class="big" id="amtIn" type="number" inputmode="decimal" placeholder="0"></div><button class="btn accent block" id="amtGo">'+esc(t('calc'))+' →</button>');setTimeout(()=>$('#amtIn').focus(),50);$('#amtGo').addEventListener('click',()=>{const v=+$('#amtIn').value;if(!(v>0))return;ctx.amount=v;closeSheet();finishPurchase(ctx);});}
-function finishPurchase(ctx){hideScan();const rec=recommend(ctx);rec.img=pendingImg;lastRec=rec;gainXP(10);renderResult(rec);}
+function finishPurchase(ctx,fromHistory){hideScan();const rec=recommend(ctx);rec.img=pendingImg;lastRec=rec;
+  if(!fromHistory){const w=rec.winner;const h={id:Date.now(),d:Date.now(),m:ctx.merchant,b:ctx.brand,a:ctx.amount,cat:ctx.category,co:ctx.country||'TW',on:!!ctx.online,pm:ctx.payment_methods||[],c:w?w.card.id:null,r:w?w.reward:0,rate:w?w.rule.rate:0,st:'seen'};S.history=(S.history||[]).filter(x=>x.st!==undefined||x.c);S.history.unshift(h);S.history=S.history.slice(0,40);rec.histId=h.id;save();gainXP(10);}
+  renderResult(rec);}
+function reopenHistory(id){const h=(S.history||[]).find(x=>x.id===id);if(!h)return;const ctx={merchant:h.m,brand:h.b||h.m,category:h.cat,amount:h.a,country:h.co||'TW',online:!!h.on,payment_methods:h.pm||[]};pendingImg=textImage(h.m+' · '+money(h.a));$('#resBgImg').src=pendingImg;go('result');hideScan();const rec=recommend(ctx);rec.img=pendingImg;rec.histId=h.id;lastRec=rec;renderResult(rec);}
 function showError(e){go('home');const m=String(e&&e.message||e);toast(m==='NOKEY'?t('errKey'):t('errNet',{e:m.slice(0,160)}),true);if(m==='NOKEY')setTimeout(openSettings,600);}
 $('#resClose').addEventListener('click',()=>go('home'));
-$('#resEdit').addEventListener('click',()=>{if(!lastRec)return;const c=lastRec.ctx;sheet('<h3>'+esc(t('editTitle'))+'</h3><div class="field"><label>'+esc(t('merchant'))+'</label><input id="edM" value="'+esc(c.merchant||'')+'"></div><div class="field"><label>'+esc(t('amount'))+'</label><input id="edA" type="number" inputmode="decimal" value="'+(c.amount||'')+'"></div><div class="field"><label>'+esc(t('category'))+'</label><select id="edC">'+CATS.map(k=>'<option value="'+k+'"'+(k===c.category?' selected':'')+'>'+esc(catName(k))+'</option>').join('')+'</select></div><button class="btn accent block" id="edGo">'+esc(t('calc'))+' →</button>');$('#edGo').addEventListener('click',()=>{c.merchant=$('#edM').value;c.brand=c.merchant;c.amount=+$('#edA').value||c.amount;c.category=$('#edC').value;closeSheet();const rec=recommend(c);rec.img=lastRec.img;lastRec=rec;renderResult(rec);});});
+$('#resEdit').addEventListener('click',()=>{if(!lastRec)return;const c=lastRec.ctx;sheet('<h3>'+esc(t('editTitle'))+'</h3><div class="field"><label>'+esc(t('merchant'))+'</label><input id="edM" value="'+esc(c.merchant||'')+'"></div><div class="field"><label>'+esc(t('amount'))+'</label><input id="edA" type="number" inputmode="decimal" value="'+(c.amount||'')+'"></div><div class="field"><label>'+esc(t('category'))+'</label><select id="edC">'+CATS.map(k=>'<option value="'+k+'"'+(k===c.category?' selected':'')+'>'+esc(catName(k))+'</option>').join('')+'</select></div><button class="btn accent block" id="edGo">'+esc(t('calc'))+' →</button>');$('#edGo').addEventListener('click',()=>{c.merchant=$('#edM').value;c.brand=c.merchant;c.amount=+$('#edA').value||c.amount;c.category=$('#edC').value;closeSheet();const rec=recommend(c);rec.img=lastRec.img;rec.histId=lastRec.histId;const hh=(S.history||[]).find(x=>x.id===rec.histId);if(hh){hh.m=c.merchant;hh.a=c.amount;hh.cat=c.category;if(rec.winner){hh.c=rec.winner.card.id;hh.r=rec.winner.reward;hh.rate=rec.winner.rule.rate;}save();}lastRec=rec;renderResult(rec);});});
 function payLine(opt,ctx){const pm=ctx.payment_methods||[];if(ctx.online)return t('payOnline');if(opt.card.id==='ctbc_linepay'&&pm.includes('linepay'))return t('payLine');return t('payCard');}
 function renderResult(rec,showAlts){
   const ctx=rec.ctx,w=rec.winner;
@@ -74,7 +80,8 @@ function renderResult(rec,showAlts){
   const d=new Date();$('#resAmt').textContent=money(ctx.amount)+' · '+catName(ctx.category)+(ctx.country&&ctx.country!=='TW'?' · '+ctx.country:'')+' · '+(LANG==='zh'?'週':'')+t('dow')[d.getDay()];
   const body=$('#resBody');
   if(!w){body.innerHTML='<div class="empty">'+esc(t('noCards'))+'</div><button class="btn accent block" onclick="go(\'wallet\');openAdd()">'+esc(t('addcard'))+'</button>';return;}
-  let h=cardFace(w.card,'hero');
+  let h='<div class="read" id="readStrip"><div class="k">'+esc(t('readBy'))+'</div><div class="m"><b>'+esc(ctx.merchant||'?')+'</b><span><i>'+esc(money(ctx.amount))+'</i> · '+esc(catName(ctx.category))+(ctx.country&&ctx.country!=='TW'?' · '+esc(ctx.country):'')+'</span></div><span class="e">✎ '+esc(t('fixRead'))+'</span></div>';
+  h+=cardFace(w.card,'hero');
   h+='<div class="rate">'+pct(w.rule.rate)+'</div>';
   h+='<div class="cardname">'+esc(L(w.card.name))+' · '+esc(L(w.rule.label))+'</div>';
   h+='<div class="back">'+esc(t('back'))+' <b>'+esc(w.card.currency.type==='cash'?money(w.reward):rewardLabel(w.card,w.reward))+'</b>'+(w.capped?'<small>'+esc(t('capHit',{r:pct(w.fb)}))+'</small>':'')+'</div>';
@@ -85,8 +92,9 @@ function renderResult(rec,showAlts){
   h+='<div class="actions"><button class="btn ghost" id="altBtn">'+esc(t('others'))+'</button><button class="btn accent" id="useBtn">✓ '+esc(t('useThis'))+'</button></div>';
   if(showAlts){h+='<div class="alts">'+rec.evals.map(e=>{const o=e.best||e.options[0];if(!o)return '';const locked=!e.best;return '<div class="alt'+(locked?' locked':'')+'">'+cardFace(e.card,'thumb')+'<div class="n">'+esc(L(e.card.name))+'<small>'+esc(L(o.rule.label))+(locked?' · 🔒':'')+'</small></div><div class="r">'+pct(o.rule.rate)+'<small>'+esc(money(o.reward))+'</small></div></div>';}).join('')+'</div>';}
   body.innerHTML=h;
+  const rs=$('#readStrip');if(rs)rs.addEventListener('click',()=>$('#resEdit').click());
   $('#altBtn').addEventListener('click',()=>renderResult(rec,!showAlts));
-  $('#useBtn').addEventListener('click',()=>{applyUsage(w);const base=evalCard(cardById(S.defaultCard)||w.card,ctx).best;const gain=Math.max(0,w.reward-(base?base.reward:0));S.saved+=gain;S.history.unshift({m:ctx.merchant,a:ctx.amount,c:w.card.id,r:w.reward,g:gain,d:Date.now()});S.history=S.history.slice(0,50);save();confetti();mood('#gxMascot','happy');setTimeout(()=>mood('#gxMascot',null),6000);gainXP(25,gain>0?'+'+money(gain):'');setTimeout(()=>{if($('#result').classList.contains('active'))go('home');},1400);});
+  $('#useBtn').addEventListener('click',()=>{applyUsage(w);const base=evalCard(cardById(S.defaultCard)||w.card,ctx).best;const gain=Math.max(0,w.reward-(base?base.reward:0));S.saved+=gain;const hh=(S.history||[]).find(x=>x.id===rec.histId);if(hh){hh.st='used';hh.c=w.card.id;hh.r=w.reward;hh.rate=w.rule.rate;hh.g=gain;}save();confetti();mood('#gxMascot','happy');setTimeout(()=>mood('#gxMascot',null),6000);gainXP(25,gain>0?'+'+money(gain):'');setTimeout(()=>{if($('#result').classList.contains('active'))go('home');},1400);});
   const ub=$('#unlockDo');if(ub)ub.addEventListener('click',()=>{const r=unmetReq(rec.unlock.rule,S.flags)||reqs(rec.unlock.rule)[0];if(r.type==='plan')S.flags[r.key]=r.value;else S.flags[r.key]=true;save();gainXP(50);const nr=recommend(ctx);nr.img=rec.img;lastRec=nr;renderResult(nr);});
 }
 </script>

@@ -422,6 +422,35 @@ body.nocam #shutter{background:linear-gradient(180deg,#4bf0b6,#2fd898);}
 .typebar button{box-shadow:0 2px 0 rgba(0,0,0,.4);}
 .seg button.on{background:linear-gradient(180deg,#fff,#e9ecf1);box-shadow:0 2px 0 #aab0ba;}
 .mask-tools .row .btn.sm{flex:0 0 auto;}
+
+/* TOUCH FEEDBACK — visible on a mirrored screen */
+.tap-ripple{position:fixed;left:0;top:0;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:rgba(52,225,161,.55);box-shadow:0 0 0 2px rgba(52,225,161,.9);pointer-events:none;z-index:999;animation:ripple .55s ease-out forwards;}
+@keyframes ripple{0%{transform:scale(.6);opacity:1}100%{transform:scale(4.2);opacity:0}}
+.pressed{animation:pressflash .42s ease-out;}
+@keyframes pressflash{0%{filter:brightness(1.6);box-shadow:0 0 0 0 rgba(52,225,161,.8)}100%{filter:brightness(1);box-shadow:0 0 0 14px rgba(52,225,161,0)}}
+.btn.pressed,.icon-btn.pressed,.pill.pressed,.scenes button.pressed,.controls .side.pressed,.typebar button.pressed{animation:pressflash .42s ease-out,pressbump .3s var(--spring);}
+@keyframes pressbump{0%{transform:scale(.93)}100%{transform:scale(1)}}
+.stk.pressed,.wl-card.pressed,.wcard.pressed,.quest.pressed,.samples button.pressed,.stmt-saved.pressed,.hist.pressed{outline:3px solid var(--accent);outline-offset:3px;}
+/* READ STRIP on result */
+.read{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin:4px 0 6px;animation:fadeup .35s both;}
+.read .k{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);white-space:nowrap;}
+.read .m{flex:1;min-width:0;}
+.read .m b{display:block;font-size:20px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.read .m span{font-size:15px;color:var(--muted);font-weight:600;}
+.read .m span i{font-style:normal;color:#fff;}
+.read .e{height:38px;padding:0 12px;border-radius:12px;background:#fff;color:#000;font-size:14px;font-weight:800;display:inline-flex;align-items:center;white-space:nowrap;box-shadow:0 3px 0 #aab0ba;}
+.res-top .who{display:none;}
+/* history */
+.hist{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:16px;padding:12px 14px;margin-bottom:8px;}
+.hist .thumb{width:54px;height:34px;border-radius:5px;overflow:hidden;background:#333;flex:0 0 auto;position:relative;}
+.hist .thumb img{position:absolute;left:50%;top:50%;width:63.1%;height:158.6%;transform:translate(-50%,-50%) rotate(-90deg);object-fit:cover;}
+.hist .tx{flex:1;min-width:0;}
+.hist .tx b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hist .tx small{display:block;color:var(--muted);font-size:12.5px;}
+.hist .r{text-align:right;white-space:nowrap;}
+.hist .r b{display:block;font-size:17px;font-weight:800;letter-spacing:-.02em;color:var(--accent);}
+.hist .r small{font-size:11px;color:var(--muted);font-weight:700;}
+.hist.used .r small{color:var(--accent);}
 </style>
 </head>
 <body>
@@ -525,7 +554,7 @@ const CARD_ART = {"dbs_everyday": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ
 
 /* ---------- i18n ---------- */
 const I18N={
-zh:{galaxySub:'你的卡片星系',goBuy:'我要買東西',typeHint:'或打字說一句：在 50嵐買珍奶 60 元',typeTitle:'打字告訴卡卡',typeSub:'店家、東西、大概多少錢，一句就好。',typeGo:'幫我選怎麼付',strat:'{n} 種消費 · {top}',stratLock:'解鎖後還有 {k} 種可以更好',eqTitle:'少賺的錢，一年能換什麼',eqYear:'照這個月推一整年',eqItems:[['cup','杯珍奶',60],['coffee','杯拿鐵',150],['ticket','張電影票',350],['tv','年 Netflix',4680],['headphones','副 AirPods',5990],['plane','張東京來回機票',8000],['phone','支 iPhone',30000],['bag','個名牌包',60000]],sbCats:'{n} 類消費最划算',wlHead:'主力卡 <b>{c}</b> · {n} 類消費最划算',wlLock:'{k} 種消費解鎖後更好',wlTap:'點一張卡看它擅長什麼',savedStmts:'已存的帳單',stmtLeft:'少拿',stmtNew:'再分析一張',stmtDel:'刪除',sbBest:'最高',sbLock:'解鎖後會更好',sbNone:'目前沒有它最划算的類別',eqOf:'{n} {u}',eqTo:'離 {u} 還差 {x}',donutA:'實際拿到',donutL:'留在桌上',scanChips:['店名','金額','付款方式','你的卡'],app:'刷神卡卡',wallet:'錢包',stmt:'帳單',addcard:'加一張卡',maskTitle:'先塗掉個資',maskSub:'用手指把卡號、姓名、效期塗黑。這一步在手機裡完成，塗完才會送出。',undo:'復原',autoMask:'一鍵遮卡號區',onDevice:'🔒 只在手機內',maskDone:'塗好了，辨識卡面',stmtTitle:'留在桌上的錢',
+zh:{galaxySub:'你的卡片星系',goBuy:'我要買東西',typeHint:'或打字說一句：在 50嵐買珍奶 60 元',typeTitle:'打字告訴卡卡',typeSub:'店家、東西、大概多少錢，一句就好。',typeGo:'幫我選怎麼付',strat:'{n} 種消費 · {top}',stratLock:'解鎖後還有 {k} 種可以更好',eqTitle:'少賺的錢，一年能換什麼',eqYear:'照這個月推一整年',eqItems:[['cup','杯珍奶',60],['coffee','杯拿鐵',150],['ticket','張電影票',350],['tv','年 Netflix',4680],['headphones','副 AirPods',5990],['plane','張東京來回機票',8000],['phone','支 iPhone',30000],['bag','個名牌包',60000]],sbCats:'{n} 類消費最划算',readBy:'卡卡讀到',fixRead:'改一下',recent:'最近的決定',used:'已刷',seen:'看過',wlHead:'主力卡 <b>{c}</b> · {n} 類消費最划算',wlLock:'{k} 種消費解鎖後更好',wlTap:'點一張卡看它擅長什麼',savedStmts:'已存的帳單',stmtLeft:'少拿',stmtNew:'再分析一張',stmtDel:'刪除',sbBest:'最高',sbLock:'解鎖後會更好',sbNone:'目前沒有它最划算的類別',eqOf:'{n} {u}',eqTo:'離 {u} 還差 {x}',donutA:'實際拿到',donutL:'留在桌上',scanChips:['店名','金額','付款方式','你的卡'],app:'刷神卡卡',wallet:'錢包',stmt:'帳單',addcard:'加一張卡',maskTitle:'先塗掉個資',maskSub:'用手指把卡號、姓名、效期塗黑。這一步在手機裡完成，塗完才會送出。',undo:'復原',autoMask:'一鍵遮卡號區',onDevice:'🔒 只在手機內',maskDone:'塗好了，辨識卡面',stmtTitle:'留在桌上的錢',
 hintTitle:'對準要買的東西',hintSub:'點一下，卡卡告訴你刷哪張。',hintNoCam:'沒相機也能玩：選一個場景',scenesLab:'模擬',
 scanning:['卡卡看看…','看店名、看價錢…','算一算你的卡…'],scanSub:'Claude 讀畫面，規則由本機算',
 useThis:'就刷這張',others:'看其他卡',retake:'再拍一次',back:'這筆拿回',theOne:'注意',unlockK:'多拿 {x} 的方法',unlockDone:'我弄好了 ✓',unlockLater:'先不管',
@@ -546,7 +575,7 @@ catNames:{general:'一般消費',convenience:'超商',drinks:'手搖飲／咖啡
 scenes:[['🧋','50嵐 手搖飲','drinks',60,'50嵐 信義店 · 珍珠奶茶 NT$60 · LINE Pay 可用'],['💻','Apple Store 信義','apple',36900,'Apple Store 信義 A13 · MacBook Air NT$36,900'],['🍣','壽司郎','dining',880,'壽司郎 台北信義店 · 結帳 NT$880 · JCB 通路'],['🧴','屈臣氏','drugstore',650,'屈臣氏 門市 · 合計 NT$650 · LINE Pay 可用'],['🏪','7-ELEVEN','convenience',120,'7-ELEVEN 統一超商 · NT$120'],['🛋️','IKEA','home',3480,'IKEA 敦北店 · NT$3,480'],['👕','UNIQLO','apparel',1990,'UNIQLO 台北信義店 · NT$1,990'],['🚃','東京 Suica 儲值','jp_transit_topup',2200,'JR 東日本 Suica チャージ ¥10,000（約 NT$2,200）'],['⛽','台塑加油','gas',1200,'台塑石油 加油站 · NT$1,200']],
 dow:['日','一','二','三','四','五','六'],
 },
-en:{galaxySub:'your card galaxy',goBuy:'I’m about to buy',typeHint:'or type it: bubble tea at 50嵐, NT$60',typeTitle:'Tell Gaga in words',typeSub:'Where, what, roughly how much. One line.',typeGo:'Pick how to pay',strat:'{n} categories · {top}',stratLock:'{k} more improve after unlocks',eqTitle:'What the missed money buys in a year',eqYear:'This month × 12',eqItems:[['cup','bubble teas',60],['coffee','lattes',150],['ticket','movie tickets',350],['tv','years of Netflix',4680],['headphones','AirPods',5990],['plane','Tokyo return flights',8000],['phone','iPhones',30000],['bag','designer bags',60000]],sbCats:'best for {n} categories',wlHead:'Main card <b>{c}</b> · best for {n} categories',wlLock:'{k} categories improve after unlocks',wlTap:'Tap a card to see what it is best at',savedStmts:'Saved statements',stmtLeft:'left',stmtNew:'Analyze another',stmtDel:'Delete',sbBest:'top',sbLock:'Better after unlocks',sbNone:'Not the best card for anything yet',eqOf:'{n} {u}',eqTo:'{x} short of {u}',donutA:'Earned',donutL:'Left on the table',scanChips:['Store','Price','Payment','Your cards'],app:'CreditGaga',wallet:'Wallet',stmt:'Statement',addcard:'Add a card',maskTitle:'Rub out the number',maskSub:'Use your thumb to black out the number, name and expiry. This happens on your phone; nothing leaves until you are done.',undo:'Undo',autoMask:'Auto-cover number area',onDevice:'🔒 On device only',maskDone:'Done, identify the card',stmtTitle:'Left on the table',
+en:{galaxySub:'your card galaxy',goBuy:'I’m about to buy',typeHint:'or type it: bubble tea at 50嵐, NT$60',typeTitle:'Tell Gaga in words',typeSub:'Where, what, roughly how much. One line.',typeGo:'Pick how to pay',strat:'{n} categories · {top}',stratLock:'{k} more improve after unlocks',eqTitle:'What the missed money buys in a year',eqYear:'This month × 12',eqItems:[['cup','bubble teas',60],['coffee','lattes',150],['ticket','movie tickets',350],['tv','years of Netflix',4680],['headphones','AirPods',5990],['plane','Tokyo return flights',8000],['phone','iPhones',30000],['bag','designer bags',60000]],sbCats:'best for {n} categories',readBy:'Gaga read',fixRead:'Fix',recent:'Recent decisions',used:'Paid',seen:'Seen',wlHead:'Main card <b>{c}</b> · best for {n} categories',wlLock:'{k} categories improve after unlocks',wlTap:'Tap a card to see what it is best at',savedStmts:'Saved statements',stmtLeft:'left',stmtNew:'Analyze another',stmtDel:'Delete',sbBest:'top',sbLock:'Better after unlocks',sbNone:'Not the best card for anything yet',eqOf:'{n} {u}',eqTo:'{x} short of {u}',donutA:'Earned',donutL:'Left on the table',scanChips:['Store','Price','Payment','Your cards'],app:'CreditGaga',wallet:'Wallet',stmt:'Statement',addcard:'Add a card',maskTitle:'Rub out the number',maskSub:'Use your thumb to black out the number, name and expiry. This happens on your phone; nothing leaves until you are done.',undo:'Undo',autoMask:'Auto-cover number area',onDevice:'🔒 On device only',maskDone:'Done, identify the card',stmtTitle:'Left on the table',
 hintTitle:'Point at what you are buying',hintSub:'Tap. Gaga picks the card.',hintNoCam:'No camera? Pick a scene',scenesLab:'Simulate',
 scanning:['Let me look…','Reading the store and price…','Running your cards…'],scanSub:'Claude reads, your phone computes',
 useThis:'Pay with this',others:'Other cards',retake:'Retake',back:'You get back',theOne:'Note',unlockK:'Unlock {x} more',unlockDone:'Done it ✓',unlockLater:'Not now',
@@ -788,6 +817,9 @@ function setLang(l){LANG=l;S.lang=l;save();applyT();renderLvl();renderHome();con
 $('#langBtn').addEventListener('click',()=>setLang(LANG==='zh'?'en':'zh'));
 function renderLvl(){const li=levelInfo();$('#lvlPill').innerHTML='<span>'+t('lvlShort',{n:li.n})+' '+esc(li.name)+'</span><span style="opacity:.7">·</span><span>'+money(S.saved)+'</span>';const g=$('#gxLvl');if(g)g.innerHTML=$('#lvlPill').innerHTML;}
 
+/* global touch feedback: ripple at the touch point + flash on the pressed control */
+document.addEventListener('pointerdown',e=>{const r=document.createElement('div');r.className='tap-ripple';r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';document.body.appendChild(r);setTimeout(()=>r.remove(),600);
+  const el=e.target.closest('button,.btn,.icon-btn,.pill,.stk,.wl-card,.wcard,.quest,.samples button,.stmt-saved,.hist,.alt,.tap');if(el){el.classList.remove('pressed');void el.offsetWidth;el.classList.add('pressed');setTimeout(()=>el.classList.remove('pressed'),450);}},{passive:true});
 /* confetti (accent only, brief) */
 function confetti(){const cv=$('#confetti'),ctx=cv.getContext('2d');cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);const P=[];for(let i=0;i<70;i++)P.push({x:innerWidth/2,y:innerHeight*.45,vx:(Math.random()-.5)*14,vy:-Math.random()*14-4,r:3+Math.random()*4,a:1,c:Math.random()<.7?'#30e3a2':'#fff'});let f=0;(function step(){ctx.clearRect(0,0,innerWidth,innerHeight);f++;for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=.45;p.vx*=.98;p.a-=.016;ctx.globalAlpha=Math.max(0,p.a);ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,p.r,p.r*1.6);}if(f<80)requestAnimationFrame(step);else ctx.clearRect(0,0,innerWidth,innerHeight);})();}
 
@@ -837,10 +869,13 @@ async function analyzePurchase(img,hint,demo){
   finishPurchase(ctx);
 }
 function askAmount(ctx){sheet('<h3>'+esc(t('amtTitle'))+'</h3><p>'+esc(ctx.merchant||'')+' · '+esc(t('amtSub'))+'</p><div class="field"><input class="big" id="amtIn" type="number" inputmode="decimal" placeholder="0"></div><button class="btn accent block" id="amtGo">'+esc(t('calc'))+' →</button>');setTimeout(()=>$('#amtIn').focus(),50);$('#amtGo').addEventListener('click',()=>{const v=+$('#amtIn').value;if(!(v>0))return;ctx.amount=v;closeSheet();finishPurchase(ctx);});}
-function finishPurchase(ctx){hideScan();const rec=recommend(ctx);rec.img=pendingImg;lastRec=rec;gainXP(10);renderResult(rec);}
+function finishPurchase(ctx,fromHistory){hideScan();const rec=recommend(ctx);rec.img=pendingImg;lastRec=rec;
+  if(!fromHistory){const w=rec.winner;const h={id:Date.now(),d:Date.now(),m:ctx.merchant,b:ctx.brand,a:ctx.amount,cat:ctx.category,co:ctx.country||'TW',on:!!ctx.online,pm:ctx.payment_methods||[],c:w?w.card.id:null,r:w?w.reward:0,rate:w?w.rule.rate:0,st:'seen'};S.history=(S.history||[]).filter(x=>x.st!==undefined||x.c);S.history.unshift(h);S.history=S.history.slice(0,40);rec.histId=h.id;save();gainXP(10);}
+  renderResult(rec);}
+function reopenHistory(id){const h=(S.history||[]).find(x=>x.id===id);if(!h)return;const ctx={merchant:h.m,brand:h.b||h.m,category:h.cat,amount:h.a,country:h.co||'TW',online:!!h.on,payment_methods:h.pm||[]};pendingImg=textImage(h.m+' · '+money(h.a));$('#resBgImg').src=pendingImg;go('result');hideScan();const rec=recommend(ctx);rec.img=pendingImg;rec.histId=h.id;lastRec=rec;renderResult(rec);}
 function showError(e){go('home');const m=String(e&&e.message||e);toast(m==='NOKEY'?t('errKey'):t('errNet',{e:m.slice(0,160)}),true);if(m==='NOKEY')setTimeout(openSettings,600);}
 $('#resClose').addEventListener('click',()=>go('home'));
-$('#resEdit').addEventListener('click',()=>{if(!lastRec)return;const c=lastRec.ctx;sheet('<h3>'+esc(t('editTitle'))+'</h3><div class="field"><label>'+esc(t('merchant'))+'</label><input id="edM" value="'+esc(c.merchant||'')+'"></div><div class="field"><label>'+esc(t('amount'))+'</label><input id="edA" type="number" inputmode="decimal" value="'+(c.amount||'')+'"></div><div class="field"><label>'+esc(t('category'))+'</label><select id="edC">'+CATS.map(k=>'<option value="'+k+'"'+(k===c.category?' selected':'')+'>'+esc(catName(k))+'</option>').join('')+'</select></div><button class="btn accent block" id="edGo">'+esc(t('calc'))+' →</button>');$('#edGo').addEventListener('click',()=>{c.merchant=$('#edM').value;c.brand=c.merchant;c.amount=+$('#edA').value||c.amount;c.category=$('#edC').value;closeSheet();const rec=recommend(c);rec.img=lastRec.img;lastRec=rec;renderResult(rec);});});
+$('#resEdit').addEventListener('click',()=>{if(!lastRec)return;const c=lastRec.ctx;sheet('<h3>'+esc(t('editTitle'))+'</h3><div class="field"><label>'+esc(t('merchant'))+'</label><input id="edM" value="'+esc(c.merchant||'')+'"></div><div class="field"><label>'+esc(t('amount'))+'</label><input id="edA" type="number" inputmode="decimal" value="'+(c.amount||'')+'"></div><div class="field"><label>'+esc(t('category'))+'</label><select id="edC">'+CATS.map(k=>'<option value="'+k+'"'+(k===c.category?' selected':'')+'>'+esc(catName(k))+'</option>').join('')+'</select></div><button class="btn accent block" id="edGo">'+esc(t('calc'))+' →</button>');$('#edGo').addEventListener('click',()=>{c.merchant=$('#edM').value;c.brand=c.merchant;c.amount=+$('#edA').value||c.amount;c.category=$('#edC').value;closeSheet();const rec=recommend(c);rec.img=lastRec.img;rec.histId=lastRec.histId;const hh=(S.history||[]).find(x=>x.id===rec.histId);if(hh){hh.m=c.merchant;hh.a=c.amount;hh.cat=c.category;if(rec.winner){hh.c=rec.winner.card.id;hh.r=rec.winner.reward;hh.rate=rec.winner.rule.rate;}save();}lastRec=rec;renderResult(rec);});});
 function payLine(opt,ctx){const pm=ctx.payment_methods||[];if(ctx.online)return t('payOnline');if(opt.card.id==='ctbc_linepay'&&pm.includes('linepay'))return t('payLine');return t('payCard');}
 function renderResult(rec,showAlts){
   const ctx=rec.ctx,w=rec.winner;
@@ -848,7 +883,8 @@ function renderResult(rec,showAlts){
   const d=new Date();$('#resAmt').textContent=money(ctx.amount)+' · '+catName(ctx.category)+(ctx.country&&ctx.country!=='TW'?' · '+ctx.country:'')+' · '+(LANG==='zh'?'週':'')+t('dow')[d.getDay()];
   const body=$('#resBody');
   if(!w){body.innerHTML='<div class="empty">'+esc(t('noCards'))+'</div><button class="btn accent block" onclick="go(\'wallet\');openAdd()">'+esc(t('addcard'))+'</button>';return;}
-  let h=cardFace(w.card,'hero');
+  let h='<div class="read" id="readStrip"><div class="k">'+esc(t('readBy'))+'</div><div class="m"><b>'+esc(ctx.merchant||'?')+'</b><span><i>'+esc(money(ctx.amount))+'</i> · '+esc(catName(ctx.category))+(ctx.country&&ctx.country!=='TW'?' · '+esc(ctx.country):'')+'</span></div><span class="e">✎ '+esc(t('fixRead'))+'</span></div>';
+  h+=cardFace(w.card,'hero');
   h+='<div class="rate">'+pct(w.rule.rate)+'</div>';
   h+='<div class="cardname">'+esc(L(w.card.name))+' · '+esc(L(w.rule.label))+'</div>';
   h+='<div class="back">'+esc(t('back'))+' <b>'+esc(w.card.currency.type==='cash'?money(w.reward):rewardLabel(w.card,w.reward))+'</b>'+(w.capped?'<small>'+esc(t('capHit',{r:pct(w.fb)}))+'</small>':'')+'</div>';
@@ -859,8 +895,9 @@ function renderResult(rec,showAlts){
   h+='<div class="actions"><button class="btn ghost" id="altBtn">'+esc(t('others'))+'</button><button class="btn accent" id="useBtn">✓ '+esc(t('useThis'))+'</button></div>';
   if(showAlts){h+='<div class="alts">'+rec.evals.map(e=>{const o=e.best||e.options[0];if(!o)return '';const locked=!e.best;return '<div class="alt'+(locked?' locked':'')+'">'+cardFace(e.card,'thumb')+'<div class="n">'+esc(L(e.card.name))+'<small>'+esc(L(o.rule.label))+(locked?' · 🔒':'')+'</small></div><div class="r">'+pct(o.rule.rate)+'<small>'+esc(money(o.reward))+'</small></div></div>';}).join('')+'</div>';}
   body.innerHTML=h;
+  const rs=$('#readStrip');if(rs)rs.addEventListener('click',()=>$('#resEdit').click());
   $('#altBtn').addEventListener('click',()=>renderResult(rec,!showAlts));
-  $('#useBtn').addEventListener('click',()=>{applyUsage(w);const base=evalCard(cardById(S.defaultCard)||w.card,ctx).best;const gain=Math.max(0,w.reward-(base?base.reward:0));S.saved+=gain;S.history.unshift({m:ctx.merchant,a:ctx.amount,c:w.card.id,r:w.reward,g:gain,d:Date.now()});S.history=S.history.slice(0,50);save();confetti();mood('#gxMascot','happy');setTimeout(()=>mood('#gxMascot',null),6000);gainXP(25,gain>0?'+'+money(gain):'');setTimeout(()=>{if($('#result').classList.contains('active'))go('home');},1400);});
+  $('#useBtn').addEventListener('click',()=>{applyUsage(w);const base=evalCard(cardById(S.defaultCard)||w.card,ctx).best;const gain=Math.max(0,w.reward-(base?base.reward:0));S.saved+=gain;const hh=(S.history||[]).find(x=>x.id===rec.histId);if(hh){hh.st='used';hh.c=w.card.id;hh.r=w.reward;hh.rate=w.rule.rate;hh.g=gain;}save();confetti();mood('#gxMascot','happy');setTimeout(()=>mood('#gxMascot',null),6000);gainXP(25,gain>0?'+'+money(gain):'');setTimeout(()=>{if($('#result').classList.contains('active'))go('home');},1400);});
   const ub=$('#unlockDo');if(ub)ub.addEventListener('click',()=>{const r=unmetReq(rec.unlock.rule,S.flags)||reqs(rec.unlock.rule)[0];if(r.type==='plan')S.flags[r.key]=r.value;else S.flags[r.key]=true;save();gainXP(50);const nr=recommend(ctx);nr.img=rec.img;lastRec=nr;renderResult(nr);});
 }
 </script>
@@ -887,10 +924,13 @@ function renderWallet(){
   const qs=questList();
   if(qs.length){h+='<div class="h2">'+esc(t('quests'))+'</div>'+qs.map(q=>{if(q.plan){const c=q.card;return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+ic(q.done?'check':'plan')+'</div><div class="tx"><b>'+esc(L(c.name))+' · '+esc(q.done?t('cubePlan',{p:L(c.plan.options[S.flags[c.plan.key]])}):t('cubeNone'))+'</b><small>'+Object.entries(c.plan.options).map(([k,v])=>'<span class="tap" data-plan="'+k+'" data-card="'+c.id+'">'+esc(L(v))+'</span>').join(' · ')+'</small></div><div class="xp">+'+q.xp+'</div></div>';}
     return '<div class="quest'+(q.done?' done':'')+'" data-q="'+q.key+'"><div class="ic">'+ic(q.done?'check':(q.req.type==='register'?'register':'bank'))+'</div><div class="tx"><b>'+esc(L(q.card.name))+' · '+esc(L(q.rule.label))+' '+pct(q.rule.rate)+'</b><small>'+esc(L(q.req.howto))+'</small></div><div class="xp">'+(q.done?'✓':'+'+q.xp)+'</div></div>';}).join('');}
+  const hist=(S.history||[]).filter(x=>x.id).slice(0,8);
+  if(hist.length){h+='<div class="h2">'+esc(t('recent'))+' · '+hist.length+'</div>'+hist.map(x=>{const c=cardById(x.c);return '<div class="hist'+(x.st==='used'?' used':'')+'" data-h="'+x.id+'">'+(c?cardFace(c,'thumb'):'<div class="thumb"></div>')+'<div class="tx"><b>'+esc(x.m||'')+'</b><small>'+esc(money(x.a))+' · '+esc(catName(x.cat))+' · '+esc(new Date(x.d).toLocaleDateString(LANG==='zh'?'zh-TW':'en-US',{month:'numeric',day:'numeric'}))+'</small></div><div class="r"><b>'+(x.rate?pct(x.rate):'—')+'</b><small>'+esc(c?shortName(c):'')+' · '+esc(x.st==='used'?t('used'):t('seen'))+'</small></div></div>';}).join('');}
   h+='<div class="h2">'+esc(t('bestRates'))+'</div><div class="bars">'+cards.map(c=>{let top=0;for(const r of c.rules){if(reqMet(r,S.flags)&&r.rate>top&&!(r.cats&&r.cats.length===0))top=r.rate;}return '<div class="bar"><div class="n">'+esc(L(c.name))+'</div><div class="t"><div class="f" style="width:'+Math.min(100,top/0.10*100)+'%"></div></div><div class="v">'+pct(top)+'</div></div>';}).join('')+'<div class="note" style="margin-top:8px">'+esc(LANG==='zh'?'依目前登錄／方案狀態算出的最高回饋率；上限與門檻在推薦時才套用。':'Highest rate under current registration/plan state; caps and thresholds apply at recommendation time.')+'</div></div>';
   h+='<div class="h2">'+esc(t('sourceLab'))+'</div><div class="src">'+cards.map(c=>'<div>'+esc(L(c.name))+' · <a href="'+esc(c.source)+'" target="_blank" rel="noopener">'+esc((c.source||'').replace(/^https?:\/\//,'').slice(0,42))+'…</a> · '+esc(t('verified'))+' '+esc(c.verified||'')+'</div>').join('')+'</div>';
   const b=$('#walletBody');b.innerHTML=h;
   b.querySelectorAll('.wcard').forEach(el=>el.addEventListener('click',()=>cardSheet(el.dataset.id)));
+  b.querySelectorAll('[data-h]').forEach(el=>el.addEventListener('click',()=>reopenHistory(+el.dataset.h)));
   b.querySelectorAll('[data-plan]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();const c=cardById(el.dataset.card);const was=S.flags[c.plan.key];S.flags[c.plan.key]=el.dataset.plan;save();if(!was)gainXP(30);renderWallet();}));
   b.querySelectorAll('.quest:not(.done)[data-q]').forEach(el=>{const key=el.dataset.q;if(key.startsWith('plan:'))return;el.addEventListener('click',()=>{S.flags[key]=true;save();gainXP(50,t('done'));renderWallet();});});
 }
