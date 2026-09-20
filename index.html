@@ -1096,6 +1096,7 @@ function layoutWallet(order,byCard,rows,instant){
     if(wlFocus&&!focus){el.classList.add('dim');el.style.transform='translate3d('+(k*spread)+'px,'+(baseY-stageH*.14+70+Math.abs(k)*7)+'px,0) rotate('+(k*6)+'deg) scale(.86)';el.style.opacity=1;}
     else if(focus){el.classList.remove('dim');el.style.transform='translate3d(0,'+(baseY-stageH*.14-30)+'px,0) rotate(0deg) scale(1.2)';el.style.opacity=1;el.style.zIndex=40;}
     else{el.classList.remove('dim');el.style.transform='translate3d('+(k*spread)+'px,'+(baseY-stageH*.14+Math.abs(k)*7)+'px,0) rotate('+(k*6)+'deg) scale(1)';el.style.opacity=1;el.style.zIndex=10+n-i;}});});
+  setTimeout(()=>els.forEach(el=>{el.style.opacity=1;}),1800);   // insurance: never leave a card invisible if transitions stall
   const cards=walletCards();const lead=order[0];const wins=lead?(byCard[lead.id]||[]).length:0;const locked=rows.filter(r=>r.unlock).length;
   let h='';
   if(!cards.length)h='<div class="wl-head">'+esc(t('noCards'))+'</div>';
