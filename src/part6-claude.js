@@ -6,8 +6,11 @@ async function claudeRaw(body){
   if(!r.ok){let e='';try{e=(await r.json()).error?.message||'';}catch(_){}throw new Error(r.status+' '+e);}
   return r.json();
 }
-async function claudeTool(system,content,tool){
-  const resp=await claudeRaw({system,messages:[{role:'user',content}],tools:[tool],tool_choice:{type:'tool',name:tool.name}});
+async function claudeTool(system,content,tool,max_tokens){
+  const forced=!/fable|mythos/i.test(S.model||'');   // Fable/Mythos 5.1 reject forced tool_choice
+  const msg=[...content,{type:'text',text:'Respond by calling the '+tool.name+' tool exactly once.'}];
+  const resp=await claudeRaw({system,messages:[{role:'user',content:msg}],tools:[tool],tool_choice:forced?{type:'tool',name:tool.name}:{type:'auto'},max_tokens:max_tokens||1500});
+  if(resp.stop_reason==='max_tokens')throw new Error('output truncated (max_tokens)');
   const b=(resp.content||[]).find(c=>c.type==='tool_use');if(!b)throw new Error('no tool output');return b.input;
 }
 const img=dataURL=>({type:'image',source:{type:'base64',media_type:'image/jpeg',data:dataURL.split(',')[1]}});
@@ -50,8 +53,11 @@ async function researchCard(g){
   const sys='You research Taiwan credit-card rewards for a rules engine. Use web_search to find the issuer’s OFFICIAL page for this card and read the current (as of '+new Date().toISOString().slice(0,10)+') reward rules: base rate, bonus categories, caps, registration or plan requirements, validity. Prefer official bank domains. Rates are decimals (3% → 0.03). Only include rules you actually found; put the official URLs in sources. When done, you MUST call the card_entry tool exactly once with the structured result.';
   const q='Card: '+(g.bank_guess||'')+' '+(g.card_name_guess||'')+' ('+(g.network_guess||'')+'). Visual: '+(g.visual||'')+'. Find its current rewards in Taiwan and return card_entry.';
   let messages=[{role:'user',content:q}];
+  let wsType='web_search_20260209';
   for(let i=0;i<6;i++){
-    const resp=await claudeRaw({system:sys,messages,tools:[{type:'web_search_20250305',name:'web_search',max_uses:6},tool],max_tokens:4000});
+    let resp;
+    try{resp=await claudeRaw({system:sys,messages,tools:[{type:wsType,name:'web_search',max_uses:6},tool],max_tokens:4000});}
+    catch(e){if(wsType==='web_search_20260209'&&/web_search|tool/i.test(String(e.message))){wsType='web_search_20250305';continue;}throw e;}
     const b=(resp.content||[]).find(c=>c.type==='tool_use'&&c.name==='card_entry');if(b)return b.input;
     if(resp.stop_reason==='pause_turn'){messages=[...messages,{role:'assistant',content:resp.content}];continue;}
     if(resp.stop_reason==='end_turn'){messages=[...messages,{role:'assistant',content:resp.content},{role:'user',content:'Now call the card_entry tool with what you found.'}];continue;}
@@ -65,7 +71,7 @@ async function readStatement(dataURL,isSample){
   const known=walletCards().map(c=>c.id+' = '+L(c.bank)+' '+L(c.name)).join('; ');
   const tool={name:'statement_extraction',description:'Transactions read from a credit card statement photo.',input_schema:{type:'object',properties:{card_id:{type:['string','null'],description:'Which known card this statement belongs to, if the issuer/product is visible: '+known+'. null if unclear.'},period:{type:'string'},transactions:{type:'array',items:{type:'object',properties:{date:{type:'string',description:'MM/DD or YYYY-MM-DD as printed'},merchant:{type:'string'},category:{type:'string',enum:CAT_ENUM},amount_twd:{type:'number'},online:{type:'boolean'},country:{type:'string'}},required:['date','merchant','category','amount_twd']}}},required:['card_id','period','transactions']}};
   const sys='You read a Taiwan credit-card statement photo and list every purchase line with its merchant, category and NT$ amount. Skip payments received, fees, interest and totals. Never read or output the card number or the cardholder name. You only READ; the phone computes rewards.';
-  return claudeTool(sys,[img(dataURL),{type:'text',text:'List all purchase transactions.'}],tool);
+  return claudeTool(sys,[img(dataURL),{type:'text',text:'List all purchase transactions.'}],tool,4000);
 }
 
 /* ---------- DEMO fallbacks (only when no key / demo mode) ---------- */
