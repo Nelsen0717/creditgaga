@@ -1,0 +1,76 @@
+<body>
+<div id="app">
+
+<!-- HOME / VIEWFINDER -->
+<section id="home" class="screen active">
+  <div class="vf-bg"></div>
+  <video id="cam" autoplay playsinline muted></video>
+  <canvas id="freeze"></canvas>
+  <div class="vf-grad"></div>
+  <div class="vf-frame"><i></i><i></i><i></i><i></i></div>
+  <header class="topbar">
+    <div class="brand"><div class="mascot"><i></i></div><div><span data-t="app"></span><small>creditgaga</small></div></div>
+    <div class="top-right">
+      <button class="pill accent" id="lvlPill"></button>
+      <button class="icon-btn" id="langBtn">EN</button>
+      <button class="icon-btn" id="gearBtn">⚙</button>
+    </div>
+  </header>
+  <div class="hint" id="homeHint"></div>
+  <div class="scenes" id="scenes"></div>
+  <div id="stack"></div>
+  <div class="controls">
+    <button class="side l" id="walletBtn"><span>💳</span><em data-t="wallet" style="font-style:normal"></em></button>
+    <button id="shutter" aria-label="shutter"></button>
+    <button class="side r" id="stmtBtn"><span>🧾</span><em data-t="stmt" style="font-style:normal"></em></button>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section id="result" class="screen">
+  <div class="res-bg"><img id="resBgImg" alt=""></div>
+  <div class="res-top">
+    <button class="icon-btn" id="resClose">✕</button>
+    <div class="who"><b id="resMerchant"></b><span id="resAmt"></span></div>
+    <button class="icon-btn" id="resEdit">✎</button>
+  </div>
+  <div class="scan" id="scanUI"><div class="laser"></div><div class="mascot big"><i></i></div><div class="txt" id="scanTxt"></div><div class="sub" id="scanSub"></div></div>
+  <div class="res-body" id="resBody"></div>
+</section>
+
+<!-- WALLET -->
+<section id="wallet" class="screen">
+  <header class="topbar"><button class="icon-btn flat" data-go="home">←</button><div class="brand"><div class="mascot"><i></i></div><span data-t="wallet"></span></div><button class="pill accent" id="addCardBtn"></button></header>
+  <div class="scroll" id="walletBody"></div>
+</section>
+
+<!-- ADD CARD (pick) -->
+<section id="addcard" class="screen">
+  <header class="topbar"><button class="icon-btn flat" data-go="wallet">←</button><div class="brand"><div class="mascot"><i></i></div><span data-t="addcard"></span></div><span style="width:38px"></span></header>
+  <div class="scroll" id="addBody"></div>
+</section>
+
+<!-- MASK -->
+<section id="mask" class="screen">
+  <header class="topbar"><button class="icon-btn flat" id="maskBack">←</button><div class="brand"><div class="mascot"><i></i></div><span data-t="maskTitle"></span></div><span style="width:38px"></span></header>
+  <div style="padding:0 20px 8px;font-size:14px;color:var(--muted);line-height:1.4" data-t="maskSub"></div>
+  <div id="maskWrap"><canvas id="maskCv"></canvas></div>
+  <div class="mask-tools">
+    <div class="row"><button class="btn ghost sm" id="maskUndo">↺ <span data-t="undo"></span></button><button class="btn ghost sm" id="maskAuto">▮ <span data-t="autoMask"></span></button><div style="flex:1"></div><span class="note" style="align-self:center" data-t="onDevice"></span></div>
+    <button class="btn accent block" id="maskDone"><span data-t="maskDone"></span> →</button>
+  </div>
+</section>
+
+<!-- STATEMENT -->
+<section id="statement" class="screen">
+  <header class="topbar"><button class="icon-btn flat" data-go="home">←</button><div class="brand"><div class="mascot"><i></i></div><span data-t="stmtTitle"></span></div><span style="width:38px"></span></header>
+  <div class="scroll" id="stmtBody"></div>
+</section>
+
+<div id="sheet"><div class="sheet-in" id="sheetIn"></div></div>
+<div id="toast"></div>
+<canvas id="confetti"></canvas>
+<input type="file" id="fileIn" accept="image/*" hidden>
+<input type="file" id="fileCam" accept="image/*" capture="environment" hidden>
+<canvas id="work" hidden></canvas>
+</div>
